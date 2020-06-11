@@ -1,0 +1,10 @@
+---
+stage:
+  - ost-images:
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images.sh'
+runtime-requirements:
+  support-nesting-level: 2
+  isolation_level: container
