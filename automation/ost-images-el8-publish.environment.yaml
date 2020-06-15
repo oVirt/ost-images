@@ -1,0 +1,4 @@
+- name: 'INSTALL_URL'
+  value: '/var/www/html/yum/CentOS-8.2.2004-x86_64-dvd1.iso'
+- name: 'PUBLISH_DIR'
+  value: '/var/www/html/yum'

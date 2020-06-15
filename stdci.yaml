@@ -5,11 +5,25 @@ stage:
         - el8
       script:
         fromfile: 'automation/ost-images-el8.sh'
+  - ost-images-el8-publish: &ost-images-el8-publish
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images-el8-publish.sh'
+      runtime-requirements:
+        project_specific_node: True
   - ost-images-el8-no-base: &ost-images-el8-no-base
       distributions:
         - el8
       script:
         fromfile: 'automation/ost-images-el8-no-base.sh'
+  - ost-images-el8-no-base-publish: &ost-images-el8-no-base-publish
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images-el8-no-base-publish.sh'
+      runtime-requirements:
+        project_specific_node: True
   - ost-images-el8-top-layers: &ost-images-el8-top-layers
       distributions:
         - el8
@@ -20,11 +34,25 @@ stage:
         - el8
       script:
         fromfile: 'automation/ost-images-el8stream.sh'
+  - ost-images-el8stream-publish: &ost-images-el8stream-publish
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images-el8stream-publish.sh'
+      runtime-requirements:
+        project_specific_node: True
   - ost-images-el8stream-no-base: &ost-images-el8stream-no-base
       distributions:
         - el8
       script:
         fromfile: 'automation/ost-images-el8stream-no-base.sh'
+  - ost-images-el8stream-no-base-publish: &ost-images-el8stream-no-base-publish
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images-el8stream-no-base-publish.sh'
+      runtime-requirements:
+        project_specific_node: True
   - ost-images-el8stream-top-layers: &ost-images-el8stream-top-layers
       distributions:
         - el8
@@ -34,8 +62,8 @@ stage:
       runtime-requirements:
         project_specific_node: True
       substage:
-        - ost-images-el8: *ost-images-el8-no-base
-        - ost-images-el8stream: *ost-images-el8stream-no-base
+        - ost-images-el8: *ost-images-el8-no-base-publish
+        - ost-images-el8stream: *ost-images-el8stream-no-base-publish
 runtime-requirements:
   support-nesting-level: 2
   isolation_level: container
