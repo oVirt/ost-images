@@ -1,5 +1,6 @@
 autoconf
 automake
+createrepo
 libguestfs-tools-c
 libvirt-client
 libvirt-daemon-config-network

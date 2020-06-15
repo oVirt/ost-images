@@ -1,3 +1,4 @@
-/var/run/libvirt
-/var/lib/libvirt/boot
 /dev/shm
+/var/lib/libvirt/boot
+/var/run/libvirt
+/var/www/html/yum

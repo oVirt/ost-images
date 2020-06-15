@@ -2,6 +2,7 @@
 
 BUILDS="rpmbuild"
 EXPORT_DIR="exported-artifacts"
+PUBLISH_DIR="/var/www/html/yum"
 
 rm -rf "${EXPORT_DIR}"
 mkdir -p "${EXPORT_DIR}"
@@ -24,3 +25,9 @@ trap on_exit EXIT
 
 find "${BUILDS}" -iname "*.rpm" -exec mv {} "${EXPORT_DIR}/" \;
 find "." -iname "*-pkglist*.txt" -exec mv {} "${EXPORT_DIR}/" \;
+cp -r "${EXPORT_DIR}"/*.rpm "${PUBLISH_DIR}/."
+createrepo_c \
+    --update \
+    --retain-old-md-by-age "5d" \
+    --compatibility \
+    "${PUBLISH_DIR}"

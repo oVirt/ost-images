@@ -1,6 +1,17 @@
 ---
 stage:
+  - poll-upstream-sources:
+      substage:
+        - ost-images:
+            runtime-requirements:
+              project_specific_node: True
+            distributions:
+              - el8
+            script:
+              fromfile: 'automation/{{ substage }}.sh'
   - ost-images:
+      runtime-requirements:
+        project_specific_node: True
       distributions:
         - el8
       script:

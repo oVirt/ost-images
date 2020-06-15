@@ -1,0 +1,2 @@
+- name: 'INSTALL_URL'
+  value: '/var/www/html/yum/CentOS-8.1.1911-x86_64-dvd1.iso'
