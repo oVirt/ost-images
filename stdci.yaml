@@ -1,21 +1,23 @@
 ---
 stage:
-  - poll-upstream-sources:
-      substage:
-        - ost-images:
-            runtime-requirements:
-              project_specific_node: True
-            distributions:
-              - el8
-            script:
-              fromfile: 'automation/{{ substage }}.sh'
-  - ost-images:
+  - ost-images-el8: &ost-images-el8
       runtime-requirements:
         project_specific_node: True
       distributions:
         - el8
       script:
-        fromfile: 'automation/ost-images.sh'
+        fromfile: 'automation/ost-images-el8.sh'
+  - ost-images-el8stream: &ost-images-el8stream
+      runtime-requirements:
+        project_specific_node: True
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images-el8stream.sh'
+  - poll-upstream-sources:
+      substage:
+        - ost-images-el8: *ost-images-el8
+        - ost-images-el8stream: *ost-images-el8stream
 runtime-requirements:
   support-nesting-level: 2
   isolation_level: container
