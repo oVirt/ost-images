@@ -24,6 +24,10 @@ BUILD_BASE := $(if $(_USING_ISO),$(findstring not installed,$(shell rpm -q $(PAC
 # or the one that's already installed
 _BASE_IMAGE_PREFIX := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-base)/$(PACKAGE_NAME)/)
 
+# If we're using the already installed base image, we have to pass
+# its version to RPM spec to have a proper dependency for the "upgrade" layer
+_BASE_IMAGE_VERSION := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-base))
+
 # Whether to build a real upgrade layer. Upgrade layer doesn't really make
 # sense in scenarios where you build from nightly repos.
 # Can be overriden by running with 'make DUMMY_UPGRADE=...'. Any non-empty
@@ -52,6 +56,9 @@ _DIFF := -diff --new-line-format="" --unchanged-line-format=""
 %.ks: template.ks.in
 	sed "s|%REPO_ROOT%|$(REPO_ROOT)|" template.ks.in > $@
 
+%-preinstalled-base:
+	ln -s $(_BASE_IMAGE_PREFIX)$(*)-base.qcow2 $(*)-base.qcow2
+
 %-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks
 	qemu-img create -f qcow2 $@.tmp 12G
 #	Qemu runs with lowered privileges so if the build
@@ -78,8 +85,8 @@ _DIFF := -diff --new-line-format="" --unchanged-line-format=""
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)"
 	mv $@.tmp $@
 
-%-upgrade.qcow2: $(if $(BUILD_BASE),%-base.qcow2)
-	qemu-img create -f qcow2 -F qcow2 -b $(_BASE_IMAGE_PREFIX)$(*)-base.qcow2 $@.tmp
+%-upgrade.qcow2: $(if $(BUILD_BASE),%-base.qcow2,%-preinstalled-base)
+	qemu-img create -f qcow2 -F qcow2 -b $(*)-base.qcow2 $@.tmp
 #	See the remark above about chmod.
 	chmod 666 $@.tmp
 	virt-customize \
@@ -204,6 +211,6 @@ rpm: spec
 		--define "distro $(DISTRO)" \
 		--define "release $(PACKAGE_RELEASE)" \
 		--define "with_base $(if $(BUILD_BASE),1,0)" \
-		--define "dummy_upgrade $(if $(DUMMY_UPGRADE),1,0)" \
+		$(if $(_BASE_IMAGE_VERSION),--define "base_version $(_BASE_IMAGE_VERSION)") \
 		--build-in-place \
 		ost-images.spec

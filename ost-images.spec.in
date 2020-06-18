@@ -4,9 +4,6 @@
 # Whether base image is built or not
 %{!?with_base: %global with_base 0}
 
-# Whether we use dummy upgrade layer (for repo-based installations)
-%{!?dummy_upgrade: %global dummy_upgrade 0}
-
 # Disable debuginfo package, since this is a meta-package
 %global debug_package %{nil}
 
@@ -26,6 +23,11 @@ BuildRequires: libvirt-daemon-config-network
 BuildRequires: make
 BuildRequires: qemu-img
 BuildRequires: virt-install
+
+# If we're building "base" layer this is simply the version
+# we use for all RPMs. If we're using preinstalled "base" layer,
+# this should match the preinstalled version.
+%{!?base_version: %global base_version %{version}-%{release}}
 
 %description
 VM images needed to run OST
@@ -59,18 +61,7 @@ Bare distro installation image
 
 %package %{distro}-upgrade
 Summary: Bare distro with packages up to date
-
-# For repo-based installations the upgrade layer doesn't contain
-# anything useful - the base layer already contains updated packages.
-# In this case we need to have a strict dependency to match
-# the nigthly-built base RPM. In iso-based installation scenarios
-# the base layer changes very rarely and we match only the major
-# version of the base package.
-%if %{dummy_upgrade}
-Requires: %{name}-%{distro}-base = %{version}-%{release}
-%else
-Requires: %{name}-%{distro}-base = %{version}
-%endif # %{dummy_upgrade}
+Requires: %{name}-%{distro}-base = %{base_version}
 
 %description %{distro}-upgrade
 Bare distro with packages up to date
