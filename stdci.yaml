@@ -1,34 +1,28 @@
 ---
 stage:
   - ost-images-el8: &ost-images-el8
-      runtime-requirements:
-        project_specific_node: True
       distributions:
         - el8
       script:
         fromfile: 'automation/ost-images-el8.sh'
   - ost-images-el8-no-base: &ost-images-el8-no-base
-      runtime-requirements:
-        project_specific_node: True
       distributions:
         - el8
       script:
         fromfile: 'automation/ost-images-el8-no-base.sh'
   - ost-images-el8stream: &ost-images-el8stream
-      runtime-requirements:
-        project_specific_node: True
       distributions:
         - el8
       script:
         fromfile: 'automation/ost-images-el8stream.sh'
   - ost-images-el8stream-no-base: &ost-images-el8stream-no-base
-      runtime-requirements:
-        project_specific_node: True
       distributions:
         - el8
       script:
         fromfile: 'automation/ost-images-el8stream-no-base.sh'
   - poll-upstream-sources:
+      runtime-requirements:
+        project_specific_node: True
       substage:
         - ost-images-el8: *ost-images-el8
         - ost-images-el8stream: *ost-images-el8stream
