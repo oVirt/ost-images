@@ -10,20 +10,26 @@ REPO_ROOT := "http://mirror.centos.org/centos/8/"
 # Empty string when using repo-based installs, ".iso" otherwise
 _USING_ISO := $(findstring .iso,$(INSTALL_URL))
 
-# Whether to build the base image or not. For repo-based installation always
-# set to "yes". For iso-based installations looks for installed base package
-# and if finds one, base won't be built. Can be overriden by running
-# with 'make BUILD_BASE=...'. Any non-empty string will be treated as true
-# and an empty string is treated as false.
+# On/off switches for building layers. These options should have
+# sensible defaults i.e. if you have 'ost-images-el8-base' package installed,
+# then the default is not to build the base package.
+# Can be overriden by running with i.e. 'make BUILD_BASE=...'.
+# Any non-empty string will be treated as true and an empty string is treated as false.
+# Only removing layers from the bottom is supported - you can't i.e.
+# build the "base" layer, but skip the "upgrade" layer.
 BUILD_BASE := $(if $(_USING_ISO),$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-base)),yes)
+BUILD_UPGRADE := $(if $(BUILD_BASE),yes,$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-upgrade)))
 
-# Use either the base image that's built locally
-# or the one that's already installed
+# When using preinstalled images these point to prefixes
+# of installed RPMs (usually '/usr/share/ost-images'), otherwise
+# they're empty strings.
 _BASE_IMAGE_PREFIX := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-base)/$(PACKAGE_NAME)/)
+_UPGRADE_IMAGE_PREFIX := $(if $(BUILD_UPGRADE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-upgrade)/$(PACKAGE_NAME)/)
 
-# If we're using the already installed base image, we have to pass
-# its version to RPM spec to have a proper dependency for the "upgrade" layer
+# When using preinstalled images these have the values of the RPM versions,
+# otherwise they're empty strings. We need these in the spec to define proper dependencies.
 _BASE_IMAGE_VERSION := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-base))
+_UPGRADE_IMAGE_VERSION := $(if $(BUILD_UPGRADE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-upgrade))
 
 # Whether to build a real upgrade layer. Upgrade layer doesn't really make
 # sense in scenarios where you build from nightly repos.

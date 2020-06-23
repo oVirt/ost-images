@@ -1,8 +1,9 @@
 %{!?distro: %global distro el8}
 %{!?release: %global release @PACKAGE_RELEASE@}
 
-# Whether base image is built or not
+# Whether certain RPMs are built or not
 %{!?with_base: %global with_base 0}
+%{!?with_upgrade: %global with_upgrade 0}
 
 # Disable debuginfo package, since this is a meta-package
 %global debug_package %{nil}
@@ -24,10 +25,11 @@ BuildRequires: make
 BuildRequires: qemu-img
 BuildRequires: virt-install
 
-# If we're building "base" layer this is simply the version
-# we use for all RPMs. If we're using preinstalled "base" layer,
+# If we're building a layer by ourselves, this is simply the version
+# we use for all RPMs. If we're using a preinstalled layer,
 # this should match the preinstalled version.
 %{!?base_version: %global base_version %{version}-%{release}}
+%{!?upgrade_version: %global upgrade_version %{version}-%{release}}
 
 %description
 VM images needed to run OST
@@ -58,6 +60,7 @@ Bare distro installation image
 
 %endif # %{with_base}
 
+%if %{with_upgrade}
 
 %package %{distro}-upgrade
 Summary: Bare distro with packages up to date
@@ -70,10 +73,11 @@ Bare distro with packages up to date
 %attr(444, -, -) %{_datarootdir}/%{name}/*-upgrade.qcow2
 %{_datarootdir}/%{name}/*-upgrade-pkglist*.txt
 
+%endif # %{with_upgrade}
 
 %package %{distro}-engine-installed
 Summary: Distro with ovirt-engine installed
-Requires: %{name}-%{distro}-upgrade = %{version}-%{release}
+Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
 
 %description %{distro}-engine-installed
 Distro with ovirt-engine installed
@@ -86,7 +90,7 @@ Distro with ovirt-engine installed
 
 %package %{distro}-host-installed
 Summary: Distro with ovirt-host installed
-Requires: %{name}-%{distro}-upgrade = %{version}-%{release}
+Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
 
 %description %{distro}-host-installed
 Distro with ovirt-host installed

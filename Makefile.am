@@ -2,20 +2,10 @@ include mk/constants.mk
 include mk/vars.mk
 
 BASE_MAKEFILE := $(if $(BUILD_BASE),mk/built-base.mk,mk/preinstalled-base.mk)
+UPGRADE_MAKEFILE := $(if $(BUILD_UPGRADE),mk/built-upgrade.mk,mk/preinstalled-upgrade.mk)
 
 include $(BASE_MAKEFILE)
-
-%-upgrade.qcow2: %-base.qcow2
-	qemu-img create -f qcow2 -F qcow2 -b $(*)-base.qcow2 $@.tmp
-#	See the remark above about chmod.
-	chmod 666 $@.tmp
-	virt-customize \
-		-a $@.tmp \
-		$(if $(DUMMY_UPGRADE),, --run-command "dnf upgrade -y") \
-		--run-command "dnf clean all" \
-		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
-		--selinux-relabel
-	mv $@.tmp $@
+include $(UPGRADE_MAKEFILE)
 
 %-provision-engine.sh:
 	cp $(PROVISION_ENGINE_SCRIPT) $@
@@ -93,15 +83,15 @@ dist_image_DATA = \
 	$(if $(BUILD_BASE),$(DISTRO)-base-pkglist.txt) \
 	$(if $(BUILD_BASE),$(DISTRO)-base.qcow2) \
 	$(if $(BUILD_BASE),$(DISTRO).ks) \
+	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade-pkglist-diff.txt) \
+	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade-pkglist.txt) \
+	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade.qcow2) \
 	$(DISTRO)-engine-installed-pkglist-diff.txt \
 	$(DISTRO)-engine-installed-pkglist.txt \
 	$(DISTRO)-engine-installed.qcow2 \
 	$(DISTRO)-host-installed-pkglist-diff.txt \
 	$(DISTRO)-host-installed-pkglist.txt \
 	$(DISTRO)-host-installed.qcow2 \
-	$(DISTRO)-upgrade-pkglist-diff.txt \
-	$(DISTRO)-upgrade-pkglist.txt \
-	$(DISTRO)-upgrade.qcow2 \
 	$(NULL)
 
 dist_image_SCRIPTS = \
@@ -132,5 +122,7 @@ rpm: spec
 		--define "release $(PACKAGE_RELEASE)" \
 		--define "with_base $(if $(BUILD_BASE),1,0)" \
 		$(if $(_BASE_IMAGE_VERSION),--define "base_version $(_BASE_IMAGE_VERSION)") \
+		--define "with_upgrade $(if $(BUILD_UPGRADE),1,0)" \
+		$(if $(_UPGRADE_IMAGE_VERSION),--define "upgrade_version $(_UPGRADE_IMAGE_VERSION)") \
 		--build-in-place \
 		ost-images.spec
