@@ -48,8 +48,8 @@ include $(BASE_MAKEFILE)
 %-pkglist.txt: %.qcow2
 	virt-copy-out -a $*.qcow2 $(_PKGLIST_PATH)/$@ .
 
-%-upgrade-pkglist-diff.txt: %-upgrade-pkglist.txt $(if $(BUILD_BASE),%-base-pkglist.txt)
-	$(_DIFF) $*-upgrade-pkglist.txt $(_BASE_IMAGE_PREFIX)$*-base-pkglist.txt > $@
+%-upgrade-pkglist-diff.txt: %-upgrade-pkglist.txt %-base-pkglist.txt
+	$(_DIFF) $*-upgrade-pkglist.txt $*-base-pkglist.txt > $@
 
 %-host-installed-pkglist-diff.txt: %-host-installed-pkglist.txt %-upgrade-pkglist.txt
 	$(_DIFF) $*-host-installed-pkglist.txt $*-upgrade-pkglist.txt > $@
