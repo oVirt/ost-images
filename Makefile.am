@@ -1,6 +1,3 @@
-# This speeds up dist
-GZIP_ENV := "--fast"
-
 # This can be overriden by running with 'make DISTRO=...'
 DISTRO := el8
 
