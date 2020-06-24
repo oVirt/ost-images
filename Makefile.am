@@ -16,6 +16,7 @@ include $(UPGRADE_MAKEFILE)
 	chmod 666 $@.tmp
 	virt-customize \
 		-a $@.tmp \
+		$(foreach repo, $(EXTRA_REPOS), --run-command "dnf config-manager --add-repo $(repo)") \
 		--run "$*-provision-engine.sh" \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--selinux-relabel
@@ -30,6 +31,7 @@ include $(UPGRADE_MAKEFILE)
 	chmod 666 $@.tmp
 	virt-customize \
 		-a $@.tmp \
+		$(foreach repo, $(EXTRA_REPOS), --run-command "dnf config-manager --add-repo $(repo)") \
 		--run "$*-provision-host.sh" \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--selinux-relabel

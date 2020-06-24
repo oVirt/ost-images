@@ -7,6 +7,11 @@ INSTALL_URL := "http://isoredirect.centos.org/centos/8/isos/x86_64/CentOS-8.2.20
 # The url of root of repos, can be overriden by running with 'make REPO_ROOT=...'
 REPO_ROOT := "http://mirror.centos.org/centos/8/"
 
+# Whitespace-separated list of extra repos to be added when building
+# '{engine-host}-installed' layers. This allows customizing these top
+# layers with custom-built artifacts.
+EXTRA_REPOS :=
+
 # Empty string when using repo-based installs, ".iso" otherwise
 _USING_ISO := $(findstring .iso,$(INSTALL_URL))
 
