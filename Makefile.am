@@ -1,5 +1,6 @@
 include mk/constants.mk
 include mk/vars.mk
+include mk/pkglist.mk
 
 BASE_MAKEFILE := $(if $(BUILD_BASE),mk/built-base.mk,mk/preinstalled-base.mk)
 UPGRADE_MAKEFILE := $(if $(BUILD_UPGRADE),mk/built-upgrade.mk,mk/preinstalled-upgrade.mk)
@@ -9,18 +10,6 @@ include $(UPGRADE_MAKEFILE)
 
 include mk/engine-installed.mk
 include mk/host-installed.mk
-
-%-pkglist.txt: %.qcow2
-	virt-copy-out -a $*.qcow2 $(_PKGLIST_PATH)/$@ .
-
-%-upgrade-pkglist-diff.txt: %-upgrade-pkglist.txt %-base-pkglist.txt
-	$(_DIFF) $*-upgrade-pkglist.txt $*-base-pkglist.txt > $@
-
-%-host-installed-pkglist-diff.txt: %-host-installed-pkglist.txt %-upgrade-pkglist.txt
-	$(_DIFF) $*-host-installed-pkglist.txt $*-upgrade-pkglist.txt > $@
-
-%-engine-installed-pkglist-diff.txt: %-engine-installed-pkglist.txt %-upgrade-pkglist.txt
-	$(_DIFF) $*-engine-installed-pkglist.txt $*-upgrade-pkglist.txt > $@
 
 ost-images.spec: ost-images.spec.in
 	sed 's/[@]PACKAGE_RELEASE[@]/$(PACKAGE_RELEASE)/g' $< >$@
