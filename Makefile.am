@@ -4,9 +4,13 @@ include mk/pkglist.mk
 
 BASE_MAKEFILE := $(if $(BUILD_BASE),mk/built-base.mk,mk/preinstalled-base.mk)
 UPGRADE_MAKEFILE := $(if $(BUILD_UPGRADE),mk/built-upgrade.mk,mk/preinstalled-upgrade.mk)
+ENGINE_DEPS_INSTALLED_MAKEFILE := $(if $(BUILD_ENGINE_DEPS_INSTALLED),mk/built-engine-deps-installed.mk,mk/preinstalled-engine-deps-installed.mk)
+HOST_DEPS_INSTALLED_MAKEFILE := $(if $(BUILD_HOST_DEPS_INSTALLED),mk/built-host-deps-installed.mk,mk/preinstalled-host-deps-installed.mk)
 
 include $(BASE_MAKEFILE)
 include $(UPGRADE_MAKEFILE)
+include $(ENGINE_DEPS_INSTALLED_MAKEFILE)
+include $(HOST_DEPS_INSTALLED_MAKEFILE)
 
 include mk/engine-installed.mk
 include mk/host-installed.mk
@@ -23,6 +27,10 @@ iso: $(DISTRO).iso
 base: $(DISTRO)-base.qcow2 $(DISTRO)-base-pkglist.txt
 
 upgrade: $(DISTRO)-upgrade.qcow2 $(DISTRO)-upgrade-pkglist.txt $(DISTRO)-upgrade-pkglist-diff.txt
+
+engine-deps: $(DISTRO)-engine-deps-installed.qcow2 $(DISTRO)-engine-deps-installed-pkglist.txt $(DISTRO)-engine-deps-installed-pkglist-diff.txt
+
+host-deps: $(DISTRO)-host-deps-installed.qcow2 $(DISTRO)-host-deps-installed-pkglist.txt $(DISTRO)-host-deps-installed-pkglist-diff.txt
 
 engine: $(DISTRO)-engine-installed.qcow2 $(DISTRO)-engine-installed-pkglist.txt $(DISTRO)-engine-installed-pkglist-diff.txt
 
@@ -69,6 +77,8 @@ CLEANFILES = \
 	*.qcow2 \
 	*.qcow2.tmp \
 	*.spec \
+	$(DISTRO)-provision-engine-deps.sh \
+	$(DISTRO)-provision-host-deps.sh \
 	$(DISTRO)-provision-engine.sh \
 	$(DISTRO)-provision-host.sh \
 	$(DIST_ARCHIVES) \

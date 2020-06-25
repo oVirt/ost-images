@@ -24,6 +24,8 @@ _USING_ISO := $(findstring .iso,$(INSTALL_URL))
 # build the "base" layer, but skip the "upgrade" layer.
 BUILD_BASE := $(if $(_USING_ISO),$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-base)),yes)
 BUILD_UPGRADE := $(if $(BUILD_BASE),yes,$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-upgrade)))
+BUILD_ENGINE_DEPS_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-engine-deps-installed)))
+BUILD_HOST_DEPS_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-host-deps-installed)))
 
 # The logic to decide if we should build '{engine,host}-installed'
 # layers is a bit different. If the 'upgrade' layer is marked to be built,
@@ -47,11 +49,15 @@ $(if $(BUILD_ENGINE_INSTALLED),,$(if $(BUILD_HOST_INSTALLED),,$(error "Extra rep
 # they're empty strings.
 _BASE_IMAGE_PREFIX := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-base)/$(PACKAGE_NAME)/)
 _UPGRADE_IMAGE_PREFIX := $(if $(BUILD_UPGRADE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-upgrade)/$(PACKAGE_NAME)/)
+_ENGINE_DEPS_INSTALLED_IMAGE_PREFIX := $(if $(BUILD_ENGINE_DEPS_INSTALLED),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-engine-deps-installed)/$(PACKAGE_NAME)/)
+_HOST_DEPS_INSTALLED_IMAGE_PREFIX := $(if $(BUILD_HOST_DEPS_INSTALLED),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-host-deps-installed)/$(PACKAGE_NAME)/)
 
 # When using preinstalled images these have the values of the RPM versions,
 # otherwise they're empty strings. We need these in the spec to define proper dependencies.
 _BASE_IMAGE_VERSION := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-base))
 _UPGRADE_IMAGE_VERSION := $(if $(BUILD_UPGRADE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-upgrade))
+_ENGINE_DEPS_INSTALLED_IMAGE_VERSION := $(if $(BUILD_ENGINE_DEPS_INSTALLED),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-engine-deps-installed))
+_HOST_DEPS_INSTALLED_IMAGE_VERSION := $(if $(BUILD_HOST_DEPS_INSTALLED),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-host-deps-installed))
 
 # Whether to build a real upgrade layer. Upgrade layer doesn't really make
 # sense in scenarios where you build from nightly repos.
@@ -61,6 +67,8 @@ DUMMY_UPGRADE := $(if $(_USING_ISO),,yes)
 
 # These variables point to scripts that provision "engine-installed"
 # and "host-installed" layers. Can be overriden by running with i.e. 'make PROVISION_HOST_SCRIPT=...'
+PROVISION_ENGINE_DEPS_SCRIPT := $(DISTRO)-provision-engine-deps.sh.in
+PROVISION_HOST_DEPS_SCRIPT := $(DISTRO)-provision-host-deps.sh.in
 PROVISION_ENGINE_SCRIPT := $(DISTRO)-provision-engine.sh.in
 PROVISION_HOST_SCRIPT := $(DISTRO)-provision-host.sh.in
 

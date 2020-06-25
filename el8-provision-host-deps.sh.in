@@ -1,0 +1,39 @@
+#!/bin/bash -xe
+dnf install -y dnf-utils "https://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
+
+PKG_DIR=$(mktemp -d)
+pushd "${PKG_DIR}"
+
+#
+# Download the 'ovirt-host' package along with all the dependencies.
+# We need to pass the architecture here - otherwise dnf reports
+# conflicts with ppcle64 package versions.
+#
+dnf --nogpgcheck download --resolve ovirt-host.x86_64
+
+#
+# This is the gist of the logic here - we take the list of packages
+# from 'tested-{engine,host}-packages.txt' file and change them to 'rm'
+# commands, i.e. for:
+#
+#  ovirt-engine
+#
+# we'll get:
+#
+#  rm ovirt-engine-[0-9]*.rpm
+#
+# This way, we will get rid of all ovirt-related RPMs, so we end up
+# with dependencies only.
+#
+shopt -s extglob
+REMOVE_RPMS_COMMAND
+shopt -u extglob
+
+#
+# Install the remaining RPM files and skip anything broken.
+#
+dnf --disablerepo '*' --skip-broken -y install *.rpm
+
+popd
+
+rm -r "${PKG_DIR}"
