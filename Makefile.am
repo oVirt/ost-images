@@ -7,35 +7,8 @@ UPGRADE_MAKEFILE := $(if $(BUILD_UPGRADE),mk/built-upgrade.mk,mk/preinstalled-up
 include $(BASE_MAKEFILE)
 include $(UPGRADE_MAKEFILE)
 
-%-provision-engine.sh:
-	cp $(PROVISION_ENGINE_SCRIPT) $@
-
-%-engine-installed.qcow2: %-upgrade.qcow2 %-provision-engine.sh
-	qemu-img create -f qcow2 -F qcow2 -b $*-upgrade.qcow2 $@.tmp
-#	See the remark above about chmod.
-	chmod 666 $@.tmp
-	virt-customize \
-		-a $@.tmp \
-		$(foreach repo, $(EXTRA_REPOS), --run-command "dnf config-manager --add-repo $(repo)") \
-		--run "$*-provision-engine.sh" \
-		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
-		--selinux-relabel
-	mv $@.tmp $@
-
-%-provision-host.sh:
-	cp $(PROVISION_HOST_SCRIPT) $@
-
-%-host-installed.qcow2: %-upgrade.qcow2 %-provision-host.sh
-	qemu-img create -f qcow2 -F qcow2 -b $*-upgrade.qcow2 $@.tmp
-#	See the remark above aboud chmod.
-	chmod 666 $@.tmp
-	virt-customize \
-		-a $@.tmp \
-		$(foreach repo, $(EXTRA_REPOS), --run-command "dnf config-manager --add-repo $(repo)") \
-		--run "$*-provision-host.sh" \
-		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
-		--selinux-relabel
-	mv $@.tmp $@
+include mk/engine-installed.mk
+include mk/host-installed.mk
 
 %-pkglist.txt: %.qcow2
 	virt-copy-out -a $*.qcow2 $(_PKGLIST_PATH)/$@ .
