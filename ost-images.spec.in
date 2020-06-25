@@ -4,6 +4,8 @@
 # Whether certain RPMs are built or not
 %{!?with_base: %global with_base 0}
 %{!?with_upgrade: %global with_upgrade 0}
+%{!?with_engine_installed: %global with_engine_installed 0}
+%{!?with_host_installed: %global with_host_installed 0}
 
 # Disable debuginfo package, since this is a meta-package
 %global debug_package %{nil}
@@ -75,6 +77,8 @@ Bare distro with packages up to date
 
 %endif # %{with_upgrade}
 
+%if %{with_engine_installed}
+
 %package %{distro}-engine-installed
 Summary: Distro with ovirt-engine installed
 Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
@@ -87,6 +91,9 @@ Distro with ovirt-engine installed
 %{_datarootdir}/%{name}/*-engine-installed-pkglist*.txt
 %{_datarootdir}/%{name}/*-provision-engine.sh
 
+%endif # %{with_engine_installed}
+
+%if %{with_host_installed}
 
 %package %{distro}-host-installed
 Summary: Distro with ovirt-host installed
@@ -99,3 +106,5 @@ Distro with ovirt-host installed
 %attr(444, -, -) %{_datarootdir}/%{name}/*-host-installed.qcow2
 %{_datarootdir}/%{name}/*-host-installed-pkglist*.txt
 %{_datarootdir}/%{name}/*-provision-host.sh
+
+%endif # %{with_host_installed}

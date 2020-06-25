@@ -25,6 +25,23 @@ _USING_ISO := $(findstring .iso,$(INSTALL_URL))
 BUILD_BASE := $(if $(_USING_ISO),$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-base)),yes)
 BUILD_UPGRADE := $(if $(BUILD_BASE),yes,$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-upgrade)))
 
+# The logic to decide if we should build '{engine,host}-installed'
+# layers is a bit different. If the 'upgrade' layer is marked to be built,
+# then we assume that '{engine,host}-installed' layers are also desired.
+# If the 'upgrade' layer is preinstalled we have two more cases - the first
+# one is when the 'EXTRA_REPOS' variable is empty, in which we also should
+# built the layer (think of a nightly CI job that rebuilds the images without
+# any custom repos). The second case is when 'EXTRA_REPOS' variable contains
+# some URLs. Then, we use a simple script to go over the repos and see if there
+# are any host/engine-related packages available (think of a user who i.e. needs
+# to test a custom 'vdsm' build - no need to built the 'engine-installed' layer).
+# Finally, if 'EXTRA_REPOS' is non-empty, but the script didn't found any host/engine-related
+# packages in the repos an error is reported.
+BUILD_ENGINE_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-engine-packages.txt '$(EXTRA_REPOS)'),yes))
+BUILD_HOST_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-host-packages.txt '$(EXTRA_REPOS)'),yes))
+
+$(if $(BUILD_ENGINE_INSTALLED),,$(if $(BUILD_HOST_INSTALLED),,$(error "Extra repos passed, but couldn't find any {engine,host}-related packages inside. Nothing to build.")))
+
 # When using preinstalled images these point to prefixes
 # of installed RPMs (usually '/usr/share/ost-images'), otherwise
 # they're empty strings.
