@@ -39,8 +39,8 @@ BUILD_HOST_DEPS_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(findstring not installe
 # to test a custom 'vdsm' build - no need to built the 'engine-installed' layer).
 # Finally, if 'EXTRA_REPOS' is non-empty, but the script didn't found any host/engine-related
 # packages in the repos an error is reported.
-BUILD_ENGINE_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-engine-packages.txt '$(EXTRA_REPOS)'),yes))
-BUILD_HOST_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-host-packages.txt '$(EXTRA_REPOS)'),yes))
+BUILD_ENGINE_INSTALLED := $(if $(BUILD_ENGINE_DEPS_INSTALLED),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-engine-packages.txt '$(EXTRA_REPOS)'),yes))
+BUILD_HOST_INSTALLED := $(if $(BUILD_HOST_DEPS_INSTALLED),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-host-packages.txt '$(EXTRA_REPOS)'),yes))
 
 $(if $(BUILD_ENGINE_INSTALLED),,$(if $(BUILD_HOST_INSTALLED),,$(error "Extra repos passed, but couldn't find any {engine,host}-related packages inside. Nothing to build.")))
 
