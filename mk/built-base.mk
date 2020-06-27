@@ -6,7 +6,10 @@
 %.ks: template.ks.in
 	sed "s|%REPO_ROOT%|$(REPO_ROOT)|" template.ks.in > $@
 
-%-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks
+%_id_rsa:
+	ssh-keygen -N "" -f $@
+
+%-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks %_id_rsa
 	qemu-img create -f qcow2 $@.tmp 12G
 #	Qemu runs with lowered privileges so if the build
 #	is done by root, the image is created with 664
@@ -29,6 +32,7 @@
 		--noreboot
 	virt-customize \
 		-a $@.tmp \
+		--ssh-inject root:file:$*_id_rsa.pub \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)"
 	mv $@.tmp $@
 

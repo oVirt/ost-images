@@ -24,6 +24,8 @@ ks: $(DISTRO).ks
 
 iso: $(DISTRO).iso
 
+ssh-keys: $(DISTRO)_id_rsa
+
 base: $(DISTRO)-base.qcow2 $(DISTRO)-base-pkglist.txt
 
 upgrade: $(DISTRO)-upgrade.qcow2 $(DISTRO)-upgrade-pkglist.txt $(DISTRO)-upgrade-pkglist-diff.txt
@@ -55,6 +57,8 @@ dist_image_DATA = \
 	$(if $(BUILD_BASE),$(DISTRO)-base-pkglist.txt) \
 	$(if $(BUILD_BASE),$(DISTRO)-base.qcow2) \
 	$(if $(BUILD_BASE),$(DISTRO).ks) \
+	$(if $(BUILD_BASE),$(DISTRO)_id_rsa) \
+	$(if $(BUILD_BASE),$(DISTRO)_id_rsa.pub) \
 	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade-pkglist-diff.txt) \
 	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade-pkglist.txt) \
 	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade.qcow2) \
@@ -85,6 +89,7 @@ CLEANFILES = \
 	*.qcow2 \
 	*.qcow2.tmp \
 	*.spec \
+	*_id_rsa* \
 	$(DISTRO)-provision-engine-deps.sh \
 	$(DISTRO)-provision-host-deps.sh \
 	$(DISTRO)-provision-engine.sh \

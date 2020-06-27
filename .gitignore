@@ -6,6 +6,7 @@
 *.qcow2.tmp
 *.spec
 *.tar.gz
+*_id_rsa*
 COPYING
 INSTALL
 Makefile

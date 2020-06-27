@@ -5,5 +5,6 @@ libguestfs-tools-c
 libvirt-client
 libvirt-daemon-config-network
 make
+openssh
 qemu-img
 virt-install

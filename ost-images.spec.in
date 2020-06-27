@@ -53,13 +53,14 @@ VM images needed to run OST
 %if %{with_base}
 
 %package %{distro}-base
-Summary: Bare distro installation image
+Summary: Bare distro installation image with ssh key for root injected
 
 %description %{distro}-base
-Bare distro installation image
+Bare distro installation image with ssh key for root injected
 
 %files %{distro}-base
 %{_datarootdir}/%{name}/*.ks
+%{_datarootdir}/%{name}/*_id_rsa*
 %attr(444, -, -) %{_datarootdir}/%{name}/*-base.qcow2
 %{_datarootdir}/%{name}/*-base-pkglist.txt
 %exclude %{_datarootdir}/%{name}/*.ks.in
