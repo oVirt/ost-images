@@ -65,5 +65,5 @@ stage:
         - ost-images-el8: *ost-images-el8-no-base-publish
         - ost-images-el8stream: *ost-images-el8stream-no-base-publish
 runtime-requirements:
-  support-nesting-level: 2
+  host-distro: same
   isolation_level: container
