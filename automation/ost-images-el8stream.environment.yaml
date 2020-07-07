@@ -1,7 +1,7 @@
 - name: 'DISTRO'
   value: 'el8stream'
 - name: 'INSTALL_URL'
-  value: '/var/www/html/yum/CentOS-Stream-8-x86_64-20191219-dvd1.iso'
+  value: 'http://isoredirect.centos.org/centos/8/isos/x86_64/CentOS-Stream-8-x86_64-20200629-dvd1.iso'
 - name: 'PROVISION_ENGINE_SCRIPT'
   value: 'el8-provision-engine.sh.in'
 - name: 'PROVISION_HOST_SCRIPT'
