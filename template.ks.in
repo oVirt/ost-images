@@ -39,6 +39,8 @@ yum-utils
 iscsi-initiator-utils
 lvm2
 targetcli
+nfs-utils
+rpcbind
 # for aaa tests from 389-ds module
 389-ds-base
 389-ds-base-legacy-tools
