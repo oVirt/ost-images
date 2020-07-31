@@ -44,6 +44,8 @@ rpcbind
 # for aaa tests from 389-ds module
 389-ds-base
 389-ds-base-legacy-tools
+# for optional vdsm coverage test
+python3-coverage
 %end
 
 ## OS POSTINSTALL
