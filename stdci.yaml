@@ -34,8 +34,8 @@ stage:
       runtime-requirements:
         project_specific_node: True
       substage:
-        - ost-images-el8: *ost-images-el8
-        - ost-images-el8stream: *ost-images-el8stream
+        - ost-images-el8: *ost-images-el8-no-base
+        - ost-images-el8stream: *ost-images-el8stream-no-base
 runtime-requirements:
   support-nesting-level: 2
   isolation_level: container
