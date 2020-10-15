@@ -1,5 +1,6 @@
 #!/bin/bash -xe
 dnf install -y dnf-utils "https://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
+yum-config-manager --add-repo "https://resources.ovirt.org/repos/ovirt/tested/master/rpm/el8/"
 
 # temporary workaround for 'mdevctl' package missing in CentOS repos
 dnf -y copr enable tinez/ost-stuff
