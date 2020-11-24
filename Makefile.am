@@ -4,13 +4,9 @@ include mk/pkglist.mk
 
 BASE_MAKEFILE := $(if $(BUILD_BASE),mk/built-base.mk,mk/preinstalled-base.mk)
 UPGRADE_MAKEFILE := $(if $(BUILD_UPGRADE),mk/built-upgrade.mk,mk/preinstalled-upgrade.mk)
-ENGINE_DEPS_INSTALLED_MAKEFILE := $(if $(BUILD_ENGINE_DEPS_INSTALLED),mk/built-engine-deps-installed.mk,mk/preinstalled-engine-deps-installed.mk)
-HOST_DEPS_INSTALLED_MAKEFILE := $(if $(BUILD_HOST_DEPS_INSTALLED),mk/built-host-deps-installed.mk,mk/preinstalled-host-deps-installed.mk)
 
 include $(BASE_MAKEFILE)
 include $(UPGRADE_MAKEFILE)
-include $(ENGINE_DEPS_INSTALLED_MAKEFILE)
-include $(HOST_DEPS_INSTALLED_MAKEFILE)
 
 include mk/engine-installed.mk
 include mk/host-installed.mk
@@ -30,17 +26,13 @@ base: $(DISTRO)-base.qcow2 $(DISTRO)-base-pkglist.txt
 
 upgrade: $(DISTRO)-upgrade.qcow2 $(DISTRO)-upgrade-pkglist.txt $(DISTRO)-upgrade-pkglist-diff.txt
 
-engine-deps: $(DISTRO)-engine-deps-installed.qcow2 $(DISTRO)-engine-deps-installed-pkglist.txt $(DISTRO)-engine-deps-installed-pkglist-diff.txt
-
-host-deps: $(DISTRO)-host-deps-installed.qcow2 $(DISTRO)-host-deps-installed-pkglist.txt $(DISTRO)-host-deps-installed-pkglist-diff.txt
-
 engine: $(DISTRO)-engine-installed.qcow2 $(DISTRO)-engine-installed-pkglist.txt $(DISTRO)-engine-installed-pkglist-diff.txt
 
 host: $(DISTRO)-host-installed.qcow2 $(DISTRO)-host-installed-pkglist.txt $(DISTRO)-host-installed-pkglist-diff.txt
 
 spec: ost-images.spec
 
-all: $(if $(BUILD_BASE),base) upgrade engine-deps host-deps engine host spec
+all: $(if $(BUILD_BASE),base) upgrade engine host spec
 
 gen-VERSION:
 	if test -d ../.git; then                                             \
@@ -62,12 +54,6 @@ dist_image_DATA = \
 	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade-pkglist-diff.txt) \
 	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade-pkglist.txt) \
 	$(if $(BUILD_UPGRADE),$(DISTRO)-upgrade.qcow2) \
-	$(if $(BUILD_ENGINE_DEPS_INSTALLED),$(DISTRO)-engine-deps-installed-pkglist-diff.txt) \
-	$(if $(BUILD_ENGINE_DEPS_INSTALLED),$(DISTRO)-engine-deps-installed-pkglist.txt) \
-	$(if $(BUILD_ENGINE_DEPS_INSTALLED),$(DISTRO)-engine-deps-installed.qcow2) \
-	$(if $(BUILD_HOST_DEPS_INSTALLED),$(DISTRO)-host-deps-installed-pkglist-diff.txt) \
-	$(if $(BUILD_HOST_DEPS_INSTALLED),$(DISTRO)-host-deps-installed-pkglist.txt) \
-	$(if $(BUILD_HOST_DEPS_INSTALLED),$(DISTRO)-host-deps-installed.qcow2) \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed-pkglist-diff.txt) \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed-pkglist.txt) \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed.qcow2) \
@@ -77,8 +63,6 @@ dist_image_DATA = \
 	$(NULL)
 
 dist_image_SCRIPTS = \
-	$(if $(BUILD_ENGINE_DEPS_INSTALLED),$(DISTRO)-provision-engine-deps.sh) \
-	$(if $(BUILD_HOST_DEPS_INSTALLED),$(DISTRO)-provision-host-deps.sh) \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-provision-engine.sh) \
 	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-provision-host.sh) \
 	$(NULL)
@@ -90,8 +74,6 @@ CLEANFILES = \
 	*.qcow2.tmp \
 	*.spec \
 	*_id_rsa* \
-	$(DISTRO)-provision-engine-deps.sh \
-	$(DISTRO)-provision-host-deps.sh \
 	$(DISTRO)-provision-engine.sh \
 	$(DISTRO)-provision-host.sh \
 	$(DIST_ARCHIVES) \
@@ -111,10 +93,6 @@ rpm: spec
 		$(if $(_BASE_IMAGE_VERSION),--define "base_version $(_BASE_IMAGE_VERSION)") \
 		--define "with_upgrade $(if $(BUILD_UPGRADE),1,0)" \
 		$(if $(_UPGRADE_IMAGE_VERSION),--define "upgrade_version $(_UPGRADE_IMAGE_VERSION)") \
-		--define "with_engine_deps_installed $(if $(BUILD_ENGINE_DEPS_INSTALLED),1,0)" \
-		$(if $(_ENGINE_DEPS_INSTALLED_IMAGE_VERSION),--define "engine_deps_installed_version $(_ENGINE_DEPS_INSTALLED_IMAGE_VERSION)") \
-		--define "with_host_deps_installed $(if $(BUILD_HOST_DEPS_INSTALLED),1,0)" \
-		$(if $(_HOST_DEPS_INSTALLED_IMAGE_VERSION),--define "host_deps_installed_version $(_HOST_DEPS_INSTALLED_IMAGE_VERSION)") \
 		--define "with_engine_installed $(if $(BUILD_ENGINE_INSTALLED),1,0)" \
 		--define "with_host_installed $(if $(BUILD_HOST_INSTALLED),1,0)" \
 		--build-in-place \

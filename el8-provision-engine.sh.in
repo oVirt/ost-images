@@ -1,3 +1,9 @@
 #!/bin/bash -xe
-dnf -y --nogpgcheck install ovirt-engine ovirt-engine-extension-aaa-ldap-setup otopi-debug-plugins ovirt-log-collector
+dnf install -y dnf-utils "https://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
+dnf module enable -y javapackages-tools pki-deps postgresql:12
+dnf -y --nogpgcheck install \
+    otopi-debug-plugins \
+    ovirt-engine \
+    ovirt-engine-extension-aaa-ldap-setup \
+    ovirt-log-collector
 dnf clean all

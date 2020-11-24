@@ -1,8 +1,8 @@
 %-provision-engine.sh:
 	cp $(PROVISION_ENGINE_SCRIPT) $@
 
-%-engine-installed.qcow2: %-engine-deps-installed.qcow2 %-provision-engine.sh
-	qemu-img create -f qcow2 -F qcow2 -b $*-engine-deps-installed.qcow2 $@.tmp
+%-engine-installed.qcow2: %-upgrade.qcow2 %-provision-engine.sh
+	qemu-img create -f qcow2 -F qcow2 -b $*-upgrade.qcow2 $@.tmp
 #	See the remark above about chmod.
 	chmod 666 $@.tmp
 	virt-customize \

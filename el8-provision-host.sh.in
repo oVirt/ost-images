@@ -1,5 +1,8 @@
 #!/bin/bash -xe
-dnf -y --nogpgcheck install ovirt-host python3-coverage
+dnf install -y dnf-utils "https://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
+dnf -y --nogpgcheck install \
+    ovirt-host \
+    python3-coverage
 # We install NetworkManager-config-server by default with
 # vdsm which stops automatic DHCP assignments to interfaces.
 # We use that in OST deploy so let's just disable that

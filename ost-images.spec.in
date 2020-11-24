@@ -4,8 +4,6 @@
 # Whether certain RPMs are built or not
 %{!?with_base: %global with_base 0}
 %{!?with_upgrade: %global with_upgrade 0}
-%{!?with_engine_deps_installed: %global with_engine_deps_installed 0}
-%{!?with_host_deps_installed: %global with_host_deps_installed 0}
 %{!?with_engine_installed: %global with_engine_installed 0}
 %{!?with_host_installed: %global with_host_installed 0}
 
@@ -34,8 +32,6 @@ BuildRequires: virt-install
 # this should match the preinstalled version.
 %{!?base_version: %global base_version %{version}-%{release}}
 %{!?upgrade_version: %global upgrade_version %{version}-%{release}}
-%{!?engine_deps_installed_version: %global engine_deps_installed_version %{version}-%{release}}
-%{!?host_deps_installed_version: %global host_deps_installed_version %{version}-%{release}}
 
 %description
 VM images needed to run OST
@@ -82,43 +78,11 @@ Bare distro with packages up to date
 
 %endif # %{with_upgrade}
 
-%if %{with_engine_deps_installed}
-
-%package %{distro}-engine-deps-installed
-Summary: Distro with ovirt-engine dependencies installed
-Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
-
-%description %{distro}-engine-deps-installed
-Distro with ovirt-engine dependencies installed
-
-%files %{distro}-engine-deps-installed
-%attr(444, -, -) %{_datarootdir}/%{name}/*-engine-deps-installed.qcow2
-%{_datarootdir}/%{name}/*-engine-deps-installed-pkglist*.txt
-%{_datarootdir}/%{name}/*-provision-engine-deps.sh
-
-%endif # %{with_engine_deps_installed}
-
-%if %{with_host_deps_installed}
-
-%package %{distro}-host-deps-installed
-Summary: Distro with ovirt-host dependencies installed
-Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
-
-%description %{distro}-host-deps-installed
-Distro with ovirt-host dependencies installed
-
-%files %{distro}-host-deps-installed
-%attr(444, -, -) %{_datarootdir}/%{name}/*-host-deps-installed.qcow2
-%{_datarootdir}/%{name}/*-host-deps-installed-pkglist*.txt
-%{_datarootdir}/%{name}/*-provision-host-deps.sh
-
-%endif # %{with_host_deps_installed}
-
 %if %{with_engine_installed}
 
 %package %{distro}-engine-installed
 Summary: Distro with ovirt-engine installed
-Requires: %{name}-%{distro}-engine-deps-installed = %{engine_deps_installed_version}
+Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
 
 %description %{distro}-engine-installed
 Distro with ovirt-engine installed
@@ -134,7 +98,7 @@ Distro with ovirt-engine installed
 
 %package %{distro}-host-installed
 Summary: Distro with ovirt-host installed
-Requires: %{name}-%{distro}-host-deps-installed = %{host_deps_installed_version}
+Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
 
 %description %{distro}-host-installed
 Distro with ovirt-host installed
