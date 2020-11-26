@@ -28,7 +28,7 @@
 		--initrd-inject=$*.ks \
 		--extra-args ks=file:/$*.ks \
 		--noautoconsole \
-		--wait 30 \
+		--wait 60 \
 		--noreboot
 	virt-customize \
 		-a $@.tmp \
