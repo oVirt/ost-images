@@ -83,6 +83,7 @@ Bare distro with packages up to date
 %package %{distro}-engine-installed
 Summary: Distro with ovirt-engine installed
 Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
+Obsoletes: %{name}-%{distro}-engine-deps-installed < %{upgrade_version}
 
 %description %{distro}-engine-installed
 Distro with ovirt-engine installed
@@ -99,6 +100,7 @@ Distro with ovirt-engine installed
 %package %{distro}-host-installed
 Summary: Distro with ovirt-host installed
 Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
+Obsoletes: %{name}-%{distro}-host-deps-installed < %{upgrade_version}
 
 %description %{distro}-host-installed
 Distro with ovirt-host installed
