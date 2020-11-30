@@ -6,6 +6,7 @@
 %{!?with_upgrade: %global with_upgrade 0}
 %{!?with_engine_installed: %global with_engine_installed 0}
 %{!?with_host_installed: %global with_host_installed 0}
+%{!?with_he_installed: %global with_he_installed 0}
 
 # Disable debuginfo package, since this is a meta-package
 %global debug_package %{nil}
@@ -111,3 +112,19 @@ Distro with ovirt-host installed
 %{_datarootdir}/%{name}/*-provision-host.sh
 
 %endif # %{with_host_installed}
+
+%if %{with_he_installed}
+
+%package %{distro}-he-installed
+Summary: Distro with ovirt-engine-appliance installed
+Requires: %{name}-%{distro}-host-installed = %{version}-%{release}
+
+%description %{distro}-he-installed
+Distro with ovirt-engine-appliance installed
+
+%files %{distro}-he-installed
+%attr(444, -, -) %{_datarootdir}/%{name}/*-he-installed.qcow2
+%{_datarootdir}/%{name}/*-he-installed-pkglist*.txt
+%{_datarootdir}/%{name}/*-provision-he.sh
+
+%endif # %{with_he_installed}

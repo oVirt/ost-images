@@ -39,6 +39,7 @@ BUILD_UPGRADE := $(if $(BUILD_BASE),yes,$(findstring not installed,$(shell rpm -
 # packages in the repos an error is reported.
 BUILD_ENGINE_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-engine-packages.txt '$(EXTRA_REPOS)'),yes))
 BUILD_HOST_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-host-packages.txt '$(EXTRA_REPOS)'),yes))
+BUILD_HE_INSTALLED := $(if $(BUILD_HOST_INSTALLED),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-he-packages.txt '$(EXTRA_REPOS)'),yes))
 
 $(if $(BUILD_ENGINE_INSTALLED),,$(if $(BUILD_HOST_INSTALLED),,$(error "Extra repos passed, but couldn't find any {engine,host}-related packages inside. Nothing to build.")))
 
@@ -63,6 +64,7 @@ DUMMY_UPGRADE := $(if $(_USING_ISO),,yes)
 # and "host-installed" layers. Can be overriden by running with i.e. 'make PROVISION_HOST_SCRIPT=...'
 PROVISION_ENGINE_SCRIPT := $(DISTRO)-provision-engine.sh.in
 PROVISION_HOST_SCRIPT := $(DISTRO)-provision-host.sh.in
+PROVISION_HE_SCRIPT := $(DISTRO)-provision-he.sh.in
 
 # This resolves to either smth like 'el8.iso' for ISOs or url for repository urls
 _LOCATION := $(if $(_USING_ISO),$(DISTRO).iso,$(INSTALL_URL))

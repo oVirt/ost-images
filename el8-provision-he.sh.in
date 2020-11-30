@@ -1,0 +1,3 @@
+#!/bin/bash -xe
+dnf -y --nogpgcheck install ovirt-engine-appliance
+dnf clean all

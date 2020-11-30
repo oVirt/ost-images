@@ -10,6 +10,7 @@ include $(UPGRADE_MAKEFILE)
 
 include mk/engine-installed.mk
 include mk/host-installed.mk
+include mk/he-installed.mk
 
 ost-images.spec: ost-images.spec.in
 	sed 's/[@]PACKAGE_RELEASE[@]/$(PACKAGE_RELEASE)/g' $< >$@
@@ -30,9 +31,11 @@ engine: $(DISTRO)-engine-installed.qcow2 $(DISTRO)-engine-installed-pkglist.txt 
 
 host: $(DISTRO)-host-installed.qcow2 $(DISTRO)-host-installed-pkglist.txt $(DISTRO)-host-installed-pkglist-diff.txt
 
+he: $(DISTRO)-he-installed.qcow2 $(DISTRO)-he-installed-pkglist.txt $(DISTRO)-he-installed-pkglist-diff.txt
+
 spec: ost-images.spec
 
-all: $(if $(BUILD_BASE),base) upgrade engine host spec
+all: $(if $(BUILD_BASE),base) upgrade engine host he spec
 
 gen-VERSION:
 	if test -d ../.git; then                                             \
@@ -60,11 +63,15 @@ dist_image_DATA = \
 	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-host-installed-pkglist-diff.txt) \
 	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-host-installed-pkglist.txt) \
 	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-host-installed.qcow2) \
+	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-he-installed-pkglist-diff.txt) \
+	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-he-installed-pkglist.txt) \
+	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-he-installed.qcow2) \
 	$(NULL)
 
 dist_image_SCRIPTS = \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-provision-engine.sh) \
 	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-provision-host.sh) \
+	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-provision-he.sh) \
 	$(NULL)
 
 CLEANFILES = \
@@ -76,6 +83,7 @@ CLEANFILES = \
 	*_id_rsa* \
 	$(DISTRO)-provision-engine.sh \
 	$(DISTRO)-provision-host.sh \
+	$(DISTRO)-provision-he.sh \
 	$(DIST_ARCHIVES) \
 	$(NULL)
 
@@ -95,5 +103,6 @@ rpm: spec
 		$(if $(_UPGRADE_IMAGE_VERSION),--define "upgrade_version $(_UPGRADE_IMAGE_VERSION)") \
 		--define "with_engine_installed $(if $(BUILD_ENGINE_INSTALLED),1,0)" \
 		--define "with_host_installed $(if $(BUILD_HOST_INSTALLED),1,0)" \
+		--define "with_he_installed $(if $(BUILD_HE_INSTALLED),1,0)" \
 		--build-in-place \
 		ost-images.spec
