@@ -7,7 +7,10 @@
 	chmod 666 $@.tmp
 	virt-customize \
 		-a $@.tmp \
+		--memsize $(_MEMSIZE) \
+		$(_CHANGE_DNF_CACHE_TO_DEV_SHM) \
 		--run "$*-provision-he.sh" \
+		$(_RESTORE_REGULAR_DNF_CACHE) \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--selinux-relabel
 	mv $@.tmp $@

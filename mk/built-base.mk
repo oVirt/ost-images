@@ -34,6 +34,5 @@
 		-a $@.tmp \
 		--ssh-inject root:file:$*_id_rsa.pub \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)"
-	mv $@.tmp $@
-
-
+	virt-sparsify --machine-readable --format qcow2 $@.tmp $@
+	rm $@.tmp

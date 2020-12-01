@@ -6,4 +6,3 @@ dnf -y --nogpgcheck install \
     ovirt-engine \
     ovirt-engine-extension-aaa-ldap-setup \
     ovirt-log-collector
-dnf clean all

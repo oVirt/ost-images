@@ -8,4 +8,3 @@ dnf -y --nogpgcheck install \
 # We use that in OST deploy so let's just disable that
 # and let DHCP do its job
 rm "/usr/lib/NetworkManager/conf.d/00-server.conf"
-dnf clean all
