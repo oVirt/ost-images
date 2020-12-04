@@ -97,6 +97,7 @@ rpm: spec
 	rpmbuild -bb \
 		--define "distro $(DISTRO)" \
 		--define "release $(PACKAGE_RELEASE)" \
+		--define "xz_num_threads $(XZ_NUM_THREADS)" \
 		--define "with_base $(if $(BUILD_BASE),1,0)" \
 		$(if $(_BASE_IMAGE_VERSION),--define "base_version $(_BASE_IMAGE_VERSION)") \
 		--define "with_upgrade $(if $(BUILD_UPGRADE),1,0)" \

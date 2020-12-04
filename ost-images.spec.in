@@ -1,6 +1,11 @@
 %{!?distro: %global distro el8}
 %{!?release: %global release @PACKAGE_RELEASE@}
 
+# RPM compression parameters
+%{!?xz_num_threads: %xz_num_threads 2}
+%global _source_payload w9T%{xz_num_threads}.xzdio
+%global _binary_payload w9T%{xz_num_threads}.xzdio
+
 # Whether certain RPMs are built or not
 %{!?with_base: %global with_base 0}
 %{!?with_upgrade: %global with_upgrade 0}

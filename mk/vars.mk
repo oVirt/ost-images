@@ -1,6 +1,9 @@
 # This can be overriden by running with 'make DISTRO=...'
 DISTRO := el8
 
+# How many threads you want to use when xzipping RPMs
+XZ_NUM_THREADS := 2
+
 # Accepts both ISOs and repo urls, can be overriden by running with 'make INSTALL_URL=...'
 INSTALL_URL := "http://isoredirect.centos.org/centos/8/isos/x86_64/CentOS-8.2.2004-x86_64-dvd1.iso"
 
