@@ -5,7 +5,7 @@ DISTRO := el8
 XZ_NUM_THREADS := 2
 
 # Accepts both ISOs and repo urls, can be overriden by running with 'make INSTALL_URL=...'
-INSTALL_URL := "http://isoredirect.centos.org/centos/8/isos/x86_64/CentOS-8.2.2004-x86_64-dvd1.iso"
+INSTALL_URL := "http://isoredirect.centos.org/centos/8/isos/x86_64/CentOS-8.3.2011-x86_64-dvd1.iso"
 
 # The url of root of repos, can be overriden by running with 'make REPO_ROOT=...'
 REPO_ROOT := "http://mirror.centos.org/centos/8/"

@@ -1,5 +1,9 @@
 #!/bin/bash -xe
 dnf install -y dnf-utils "https://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
+
+# temporary workaround for broken ovirt release RPM on CentOS 8.3
+dnf config-manager --enable powertools
+
 dnf module enable -y javapackages-tools pki-deps postgresql:12
 dnf -y --nogpgcheck install \
     otopi-debug-plugins \
