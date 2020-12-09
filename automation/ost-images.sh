@@ -17,7 +17,7 @@ export LIBGUESTFS_TRACE=1
 ! [[ -c "/dev/kvm" ]] && mknod /dev/kvm c 10 232
 
 on_exit() {
-    make clean
+    make -e clean
     rm -rf "${BUILDS}"
 }
 

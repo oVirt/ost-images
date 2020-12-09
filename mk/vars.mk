@@ -17,6 +17,13 @@ EXTRA_REPOS :=
 
 # Empty string when using repo-based installs, ".iso" otherwise
 _USING_ISO := $(findstring .iso,$(INSTALL_URL))
+# The virtual size of the disk.
+# Since qcows are sparse they only use as much space as was really written to them.
+DISK_SIZE := 12G
+# Whether or not to run 'virt-sparsify' on the base image.
+# This reduces the image size significantly,
+# but requires the same amount of free space available as defined by 'DISK_SIZE' variable.
+SPARSIFY_BASE := yes
 
 # On/off switches for building layers. These options should have
 # sensible defaults i.e. if you have 'ost-images-el8-base' package installed,
@@ -43,8 +50,6 @@ BUILD_UPGRADE := $(if $(BUILD_BASE),yes,$(findstring not installed,$(shell rpm -
 BUILD_ENGINE_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-engine-packages.txt '$(EXTRA_REPOS)'),yes))
 BUILD_HOST_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-host-packages.txt '$(EXTRA_REPOS)'),yes))
 BUILD_HE_INSTALLED := $(if $(BUILD_HOST_INSTALLED),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-he-packages.txt '$(EXTRA_REPOS)'),yes))
-
-$(if $(BUILD_ENGINE_INSTALLED),,$(if $(BUILD_HOST_INSTALLED),,$(error "Extra repos passed, but couldn't find any {engine,host}-related packages inside. Nothing to build.")))
 
 # When using preinstalled images these point to prefixes
 # of installed RPMs (usually '/usr/share/ost-images'), otherwise

@@ -18,7 +18,7 @@
 		$*.ks.in > $@
 
 %-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks
-	qemu-img create -f qcow2 $@.tmp 12G
+	qemu-img create -f qcow2 $@.tmp $(DISK_SIZE)
 #	Qemu runs with lowered privileges so if the build
 #	is done by root, the image is created with 664
 #	permissions and qemu is unable to write to it.
@@ -41,5 +41,9 @@
 	virt-customize \
 		-a $@.tmp \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)"
-	virt-sparsify --machine-readable --format qcow2 $@.tmp $@
-	rm $@.tmp
+	if [[ $(SPARSIFY_BASE) == yes ]]; then \
+		virt-sparsify --machine-readable --format qcow2 $@.tmp $@; \
+		rm $@.tmp; \
+	else \
+		mv $@.tmp $@; \
+	fi

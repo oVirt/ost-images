@@ -65,7 +65,6 @@ Bare distro installation image with ssh key for root injected
 %{_datarootdir}/%{name}/*_id_rsa*
 %attr(444, -, -) %{_datarootdir}/%{name}/*-base.qcow2
 %{_datarootdir}/%{name}/*-base-pkglist.txt
-%exclude %{_datarootdir}/%{name}/*.ks.in
 
 %endif # %{with_base}
 
