@@ -3,8 +3,8 @@
 %.iso:
 	$(if $(findstring http,$(INSTALL_URL)),curl -L -o $@ $(INSTALL_URL),ln -s $(INSTALL_URL) $@)
 
-%.ks: template.ks.in
-	sed "s|%REPO_ROOT%|$(REPO_ROOT)|" template.ks.in > $@
+%.ks: %.ks.in
+	sed "s|%REPO_ROOT%|$(REPO_ROOT)|" $@.in > $@
 
 %_id_rsa:
 	ssh-keygen -N "" -f $@
