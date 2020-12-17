@@ -12,6 +12,18 @@ stage:
         fromfile: 'automation/ost-images-el8-publish.sh'
       runtime-requirements:
         project_specific_node: True
+  - ost-images-node: &ost-images-node
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images-node.sh'
+  - ost-images-node-publish: &ost-images-node-publish
+      distributions:
+        - el8
+      script:
+        fromfile: 'automation/ost-images-node-publish.sh'
+      runtime-requirements:
+        project_specific_node: True
   - ost-images-el8-no-base: &ost-images-el8-no-base
       distributions:
         - el8
