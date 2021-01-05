@@ -5,7 +5,7 @@ _PKGLIST_PATH := /var/tmp
 _DIFF := -diff --new-line-format="" --unchanged-line-format=""
 
 # How much memory virt-customize should get in MB
-_MEMSIZE := 5120
+_MEMSIZE := 7168
 
 # Directives to change/restore dnf config to use RAM as dnf cache in VM
 _CHANGE_DNF_CACHE_TO_DEV_SHM := --append-line '/etc/dnf/dnf.conf:cachedir=/dev/shm'
