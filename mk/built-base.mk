@@ -4,12 +4,10 @@
 	$(if $(findstring http,$(INSTALL_URL)),curl -L -o $@ $(INSTALL_URL),ln -s $(INSTALL_URL) $@)
 
 %_id_rsa:
-	ssh-keygen -N "" -f $@
+	cp id_rsa $@
 
-# Nothing to do here really, since it's produced by
-# # the %_id_rsa target, but good to have as a dependency.
-%_id_rsa.pub: %_id_rsa
-	true
+%_id_rsa.pub:
+	cp id_rsa.pub $@
 
 %.ks: %.ks.in %_id_rsa.pub
 	sed \
