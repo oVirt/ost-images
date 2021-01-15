@@ -23,7 +23,7 @@ on_exit() {
 
 publish_images() {
     cp -r "${EXPORT_DIR}"/*.rpm "${PUBLISH_DIR}/."
-    dnf repomanage --old --keep "${MAX_RPM_AGE}" "${PUBLISH_DIR}" | xargs -r rm
+    dnf repomanage --old --keep "${MAX_RPM_AGE}" "${PUBLISH_DIR}" | xargs -r rm -f
     createrepo_c \
         --update \
         --retain-old-md-by-age "${MAX_RPM_AGE}d" \
