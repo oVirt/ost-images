@@ -11,7 +11,7 @@ network --bootproto=dhcp
 poweroff
 
 # storage
-bootloader --location=mbr --driveorder=vda --append="crashkernel=auto consoleblank=0 net.ifnames=0 console=ttyS0,115200n8"
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto consoleblank=0 net.ifnames=0 console=hvc0"
 zerombr
 clearpart --all
 part /boot --size=256
