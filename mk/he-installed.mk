@@ -14,3 +14,4 @@
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--selinux-relabel
 	mv $@.tmp $@
+	virt-cat -a $@ /tmp/builder.log | tail -20
