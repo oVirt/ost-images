@@ -35,6 +35,7 @@
 		--extra-args ks=file:/$*.ks \
 		--noautoconsole \
 		--wait 60 \
+		--debug \
 		--noreboot
 	virt-customize \
 		-a $@.tmp \
