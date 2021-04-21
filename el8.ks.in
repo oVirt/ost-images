@@ -66,4 +66,7 @@ sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;' /etc/ssh/
 # history
 echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 
+# clean repo metadata for url-based builds
+dnf clean all
+
 %end
