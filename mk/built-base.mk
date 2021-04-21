@@ -34,7 +34,9 @@
 		--hvm \
 		--graphics=vnc \
 		--initrd-inject=$*.ks \
-		--extra-args "ks=file:/$*.ks console=ttyS0,115200" \
+		--extra-args ks=file:/$*.ks \
+		--extra-args fips=1 \
+		--extra-args console=ttyS0,115200 \
 		--serial=file,path=$(shell realpath ${CONSOLE_LOG}) \
 		--noautoconsole \
 		--wait 60 \
