@@ -74,7 +74,6 @@ stage:
       runtime-requirements:
         project_specific_node: True
       substage:
-        - ost-images-el8: *ost-images-el8-no-base-publish
         - ost-images-el8stream: *ost-images-el8stream-no-base-publish
 runtime-requirements:
   host-distro: same
