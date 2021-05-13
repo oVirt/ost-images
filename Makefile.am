@@ -95,6 +95,7 @@ EXTRA_DIST = \
 
 rpm: spec
 	rpmbuild -bb \
+		--define "_topdir $(shell realpath $(builddir))/rpmbuild" \
 		--define "distro $(DISTRO)" \
 		--define "release $(PACKAGE_RELEASE)" \
 		--define "xz_num_threads $(XZ_NUM_THREADS)" \
