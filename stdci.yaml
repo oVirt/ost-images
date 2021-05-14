@@ -70,11 +70,6 @@ stage:
         - el8
       script:
         fromfile: 'automation/ost-images-el8stream-top-layers.sh'
-  - poll-upstream-sources:
-      runtime-requirements:
-        project_specific_node: True
-      substage:
-        - ost-images-el8stream: *ost-images-el8stream-no-base-publish
 runtime-requirements:
   host-distro: same
   isolation_level: container
