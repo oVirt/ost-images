@@ -75,6 +75,7 @@ dist_image_SCRIPTS = \
 	$(NULL)
 
 CLEANFILES = \
+	*-console.log \
 	*-pkglist*.txt \
 	*.ks \
 	*.qcow2 \

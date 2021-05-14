@@ -15,6 +15,8 @@
 		-e "s|%SSH_PUB_KEY%|${shell cat $*_id_rsa.pub}|" \
 		$*.ks.in > $@
 
+%-base.qcow2: CONSOLE_LOG=$*-base-console.log
+
 %-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks
 	qemu-img create -f qcow2 $@.tmp $(DISK_SIZE)
 #	Qemu runs with lowered privileges so if the build
@@ -32,11 +34,17 @@
 		--hvm \
 		--graphics=vnc \
 		--initrd-inject=$*.ks \
-		--extra-args ks=file:/$*.ks \
+		--extra-args "ks=file:/$*.ks console=ttyS0,115200" \
+		--serial=file,path=$(shell realpath ${CONSOLE_LOG}) \
 		--noautoconsole \
 		--wait 60 \
 		--debug \
-		--noreboot
+		--noreboot || \
+			{ \
+				echo "ERROR: virt-install $(@:.qcow2=) failed:"; \
+				tail -20 ${CONSOLE_LOG}; \
+				exit 1; \
+			}
 	virt-customize \
 		-a $@.tmp \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)"
