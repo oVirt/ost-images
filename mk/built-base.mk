@@ -38,7 +38,6 @@
 		--serial=file,path=$(shell realpath ${CONSOLE_LOG}) \
 		--noautoconsole \
 		--wait 60 \
-		--debug \
 		--noreboot || \
 			{ \
 				echo "ERROR: virt-install $(@:.qcow2=) failed:"; \
