@@ -47,7 +47,8 @@
 	virt-customize \
 		-a $@.tmp \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
-		--run-command "sed -i '/After=network-online.target/d' /usr/lib/systemd/system/nis-domainname.service"
+		--run-command "sed -i '/After=network-online.target/d' /usr/lib/systemd/system/nis-domainname.service" \
+		--append-line "/etc/dnf/dnf.conf:exclude=edk2-ovmf-20200602gitca407c7246bf-5.el8"
 	if [[ $(SPARSIFY_BASE) == yes ]]; then \
 		virt-sparsify --machine-readable --format qcow2 $@.tmp $@; \
 		rm $@.tmp; \
