@@ -19,7 +19,7 @@ EXTRA_REPOS :=
 _USING_ISO := $(findstring .iso,$(INSTALL_URL))
 # The virtual size of the disk.
 # Since qcows are sparse they only use as much space as was really written to them.
-DISK_SIZE := 13G
+DISK_SIZE := 16G
 # Whether or not to run 'virt-sparsify' on the base image.
 # This reduces the image size significantly,
 # but requires the same amount of free space available as defined by 'DISK_SIZE' variable.
