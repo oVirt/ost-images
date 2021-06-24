@@ -48,6 +48,7 @@
 			}
 	virt-customize \
 		-a $@.tmp \
+		--copy-in ${NM_STABLE_IPV6_CONF}:${NM_CONF_DIR} \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)"
 	if [[ $(SPARSIFY_BASE) == yes ]]; then \
 		virt-sparsify --machine-readable --format qcow2 $@.tmp $@; \
