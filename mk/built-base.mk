@@ -24,9 +24,12 @@
 #	permissions and qemu is unable to write to it.
 #	This is fixed on RPM level.
 	chmod 666 $@.tmp
+	# node image build with the engine appliance needs lots of memory,
+	# also because we put dnf cache on tmpfs. 3072 MiB failed, 6144 worked.
+	# Didn't check what the minimum is currently.
 	virt-install \
 		--name $(@:.qcow2=) \
-		--memory 3072 \
+		--memory 6144 \
 		--vcpus 2 \
 		--disk path=$@.tmp \
 		--location=$(_LOCATION) \
