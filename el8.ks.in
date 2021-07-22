@@ -16,7 +16,7 @@ zerombr
 clearpart --all
 part /boot --size=256
 part / --grow --size=8192 --fsoptions="noatime"
-part swap --size 1024
+part swap --size 4096
 
 # repos
 repo --name=rhel-8-baseos-rpms --baseurl=%REPO_ROOT%/BaseOS/x86_64/os/
