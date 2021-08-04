@@ -16,7 +16,7 @@ liveimg --url=file:///run/install/repo/ovirt-node-ng-image.squashfs.img
 
 %post --erroronfail
 exec > /dev/ttyS0 2>&1
-set -x
+set -ex
 imgbase --debug layout --init  >> /var/log/imgbased.log 2>&1
 
 # We install NetworkManager-config-server by default with
