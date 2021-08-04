@@ -39,11 +39,9 @@ mount -onouuid "/dev/${vg}/var_log_audit" /tmp/rw_layer/var/log/audit
 mkdir -p /tmp/rw_layer/dnftmp
 mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
 nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
-# We use node-image of ovirt-4.4, which includes ovirt-release-44, which
-# provides an "ovirt-4.4" repo. Use only that, so that dnf does not have
-# to update local data for all other repos. If/when we want to use a node
-# image from some other version (e.g. master), need to update here as well.
-nsenter --root=/tmp/rw_layer dnf --repo=ovirt-4.4 --releasever=8 install -y ovirt-engine-appliance
+# --repo is mainly an optimization, also helps preventing some build failures -
+# if they are due to other repos being inaccessible.
+nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=8 install -y ovirt-engine-appliance
 nsenter --root=/tmp/rw_layer sed -i /^cachedir/d /etc/dnf/dnf.conf
 umount /tmp/rw_layer/dnftmp
 rmdir /tmp/rw_layer/dnftmp
