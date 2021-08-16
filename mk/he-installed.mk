@@ -11,6 +11,7 @@
 		$(_CHANGE_DNF_CACHE_TO_DEV_SHM) \
 		--run "$*-provision-he.sh" \
 		$(_RESTORE_REGULAR_DNF_CACHE) \
+		--run-command "curl -L -o /var/tmp/cirros.img $(CIRROS_URL)" \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--selinux-relabel
 	mv $@.tmp $@
