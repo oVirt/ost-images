@@ -6,4 +6,5 @@ dnf -y --nogpgcheck install \
     otopi-debug-plugins \
     ovirt-engine \
     ovirt-engine-extension-aaa-ldap-setup \
-    ovirt-log-collector
+    ovirt-log-collector \
+    ovirt-imageio-client
