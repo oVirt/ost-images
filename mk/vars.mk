@@ -25,7 +25,7 @@ DISK_SIZE := 19G
 # but requires the same amount of free space available as defined by 'DISK_SIZE' variable.
 SPARSIFY_BASE := yes
 # CirrOS to be included in engine images for later image upload and use as a base for guest VMs
-CIRROS_URL := https://github.com/cirros-dev/cirros/releases/download/0.5.1/cirros-0.5.1-x86_64-disk.img 
+CIRROS_URL := http://glance.ovirt.org:9292/v2/images/6d5ca10c-ffbc-4a7a-91bf-252ce43d9af9/file
 
 # On/off switches for building layers. These options should have
 # sensible defaults i.e. if you have 'ost-images-el8-base' package installed,
