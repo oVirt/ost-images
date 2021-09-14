@@ -10,6 +10,7 @@
 		--memsize $(_MEMSIZE) \
 		$(_CHANGE_DNF_CACHE_TO_DEV_SHM) \
 		--run "$*-provision-he.sh" \
+		--run-command "dnf download --downloaddir /var/tmp sysstat lm_sensors-libs.x86_64" \
 		$(_RESTORE_REGULAR_DNF_CACHE) \
 		--run-command "curl -L -o /var/tmp/cirros.img $(CIRROS_URL)" \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
