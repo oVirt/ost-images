@@ -4,8 +4,7 @@ yum-config-manager --add-repo "https://resources.ovirt.org/repos/ovirt/tested/ma
 
 dnf -y --nogpgcheck install \
     ovirt-host \
-    python3-coverage \
-    vdsm-hook-vhostmd
+    python3-coverage
 # We install NetworkManager-config-server by default with
 # vdsm which stops automatic DHCP assignments to interfaces.
 # We use that in OST deploy so let's just disable that
