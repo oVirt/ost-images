@@ -2,7 +2,7 @@
 DISTRO := el8stream
 
 # How many threads you want to use when xzipping RPMs
-XZ_NUM_THREADS := 2
+XZ_NUM_THREADS := 4
 
 # Accepts both ISOs and repo urls, can be overriden by running with 'make INSTALL_URL=...'
 INSTALL_URL := "http://isoredirect.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso"
