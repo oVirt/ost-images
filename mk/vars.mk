@@ -1,14 +1,14 @@
 # This can be overriden by running with 'make DISTRO=...'
-DISTRO := el8
+DISTRO := el8stream
 
 # How many threads you want to use when xzipping RPMs
 XZ_NUM_THREADS := 2
 
 # Accepts both ISOs and repo urls, can be overriden by running with 'make INSTALL_URL=...'
-INSTALL_URL := "http://isoredirect.centos.org/centos/8/isos/x86_64/CentOS-8.3.2011-x86_64-dvd1.iso"
+INSTALL_URL := "http://isoredirect.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso"
 
 # The url of root of repos, can be overriden by running with 'make REPO_ROOT=...'
-REPO_ROOT := "http://mirror.centos.org/centos/8/"
+REPO_ROOT := "http://mirror.centos.org/centos/8-stream/"
 
 # Whitespace-separated list of extra repos to be added when building
 # '{engine-host}-installed' layers. This allows customizing these top
