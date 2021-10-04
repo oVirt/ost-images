@@ -1,5 +1,6 @@
 #!/bin/bash -xe
 dnf install -y dnf-utils "https://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
+sed -i 's/fastest/#fastest/g; s/mirrorlist/#mirrorlist/g; s/#baseurl/baseurl/g' /etc/yum.repos.d/ovirt-master-snapshot.repo
 yum-config-manager --add-repo "https://resources.ovirt.org/repos/ovirt/tested/master/rpm/el8/"
 
 dnf -y --nogpgcheck install \
