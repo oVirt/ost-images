@@ -15,3 +15,6 @@ dnf -y --nogpgcheck install \
 # We use that in OST deploy so let's just disable that
 # and let DHCP do its job
 rm "/usr/lib/NetworkManager/conf.d/00-server.conf"
+
+# Cause journal logs to persist after reboot.
+mkdir -p /var/log/journal
