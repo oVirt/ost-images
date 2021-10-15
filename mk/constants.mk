@@ -2,7 +2,7 @@
 _PKGLIST_PATH := /var/tmp
 
 # Command used to make *pkglist-diff.txt files
-_DIFF := -diff --new-line-format="" --unchanged-line-format=""
+_DIFF := diff --new-line-format="" --unchanged-line-format=""
 
 # How much memory virt-customize should get in MB
 _MEMSIZE := 7168
