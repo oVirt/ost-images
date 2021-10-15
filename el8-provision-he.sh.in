@@ -1,2 +1,2 @@
 #!/bin/bash -xe
-dnf -y --nogpgcheck install ovirt-engine-appliance
+dnf -y --nogpgcheck install ovirt-engine-appliance ovirt-imageio-client
