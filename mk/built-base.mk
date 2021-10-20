@@ -37,7 +37,7 @@
 		--hvm \
 		--graphics=vnc \
 		--initrd-inject=$*.ks \
-		--extra-args ks=file:/$*.ks \
+		--extra-args inst.ks=file:/$*.ks \
 		--extra-args fips=1 \
 		--extra-args console=ttyS0,115200 \
 		--serial=pty,log.file=$(shell realpath ${CONSOLE_LOG}) \
