@@ -10,11 +10,6 @@ INSTALL_URL := "http://isoredirect.centos.org/centos/8-stream/isos/x86_64/CentOS
 # The url of root of repos, can be overriden by running with 'make REPO_ROOT=...'
 REPO_ROOT := "http://mirror.centos.org/centos/8-stream/"
 
-# Whitespace-separated list of extra repos to be added when building
-# '{engine-host}-installed' layers. This allows customizing these top
-# layers with custom-built artifacts.
-EXTRA_REPOS :=
-
 # Empty string when using repo-based installs, ".iso" otherwise
 _USING_ISO := $(findstring .iso,$(INSTALL_URL))
 # The virtual size of the disk.
@@ -37,21 +32,12 @@ CIRROS_URL := http://glance.ovirt.org:9292/v2/images/6d5ca10c-ffbc-4a7a-91bf-252
 BUILD_BASE := $(if $(_USING_ISO),$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-base)),yes)
 BUILD_UPGRADE := $(if $(BUILD_BASE),yes,$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-upgrade)))
 
-# The logic to decide if we should build '{engine,host}-installed'
-# layers is a bit different. If the 'upgrade' layer is marked to be built,
-# then we assume that '{engine,host}-installed' layers are also desired.
-# If the 'upgrade' layer is preinstalled we have two more cases - the first
-# one is when the 'EXTRA_REPOS' variable is empty, in which we also should
-# built the layer (think of a nightly CI job that rebuilds the images without
-# any custom repos). The second case is when 'EXTRA_REPOS' variable contains
-# some URLs. Then, we use a simple script to go over the repos and see if there
-# are any host/engine-related packages available (think of a user who i.e. needs
-# to test a custom 'vdsm' build - no need to built the 'engine-installed' layer).
-# Finally, if 'EXTRA_REPOS' is non-empty, but the script didn't found any host/engine-related
-# packages in the repos an error is reported.
-BUILD_ENGINE_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-engine-packages.txt '$(EXTRA_REPOS)'),yes))
-BUILD_HOST_INSTALLED := $(if $(BUILD_UPGRADE),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-host-packages.txt '$(EXTRA_REPOS)'),yes))
-BUILD_HE_INSTALLED := $(if $(BUILD_HOST_INSTALLED),yes,$(if $(EXTRA_REPOS),$(shell ./helpers/find-packages-in-repo.sh tested-he-packages.txt '$(EXTRA_REPOS)'),yes))
+# If the 'upgrade' layer is marked to be built, then we assume that
+# '{engine,host}-installed' layers are also desired.
+# Similar logic applies to 'he-installed' layer.
+BUILD_ENGINE_INSTALLED := $(if $(BUILD_UPGRADE),yes,)
+BUILD_HOST_INSTALLED := $(if $(BUILD_UPGRADE),yes,)
+BUILD_HE_INSTALLED := $(if $(BUILD_HOST_INSTALLED),yes,)
 
 # When using preinstalled images these point to prefixes
 # of installed RPMs (usually '/usr/share/ost-images'), otherwise

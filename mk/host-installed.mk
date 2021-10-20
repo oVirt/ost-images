@@ -8,7 +8,6 @@
 	virt-customize \
 		-a $@.tmp \
 		--memsize $(_MEMSIZE) \
-		$(foreach repo, $(EXTRA_REPOS), --run-command "dnf config-manager --add-repo $(repo)") \
 		$(_CHANGE_DNF_CACHE_TO_DEV_SHM) \
 		--run "$*-provision-host.sh" \
 		$(_RESTORE_REGULAR_DNF_CACHE) \
