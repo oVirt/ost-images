@@ -66,7 +66,7 @@ Bare distro installation image with ssh key for root injected
 %attr(444, -, -) %{_datarootdir}/%{name}/*-base.qcow2
 %{_datarootdir}/%{name}/*-base-pkglist.txt
 
-%endif # %{with_base}
+%endif
 
 %if %{with_upgrade}
 
@@ -81,7 +81,7 @@ Bare distro with packages up to date
 %attr(444, -, -) %{_datarootdir}/%{name}/*-upgrade.qcow2
 %{_datarootdir}/%{name}/*-upgrade-pkglist*.txt
 
-%endif # %{with_upgrade}
+%endif
 
 %if %{with_engine_installed}
 
@@ -98,7 +98,7 @@ Distro with ovirt-engine installed
 %{_datarootdir}/%{name}/*-engine-installed-pkglist*.txt
 %{_datarootdir}/%{name}/*-provision-engine.sh
 
-%endif # %{with_engine_installed}
+%endif
 
 %if %{with_host_installed}
 
@@ -115,7 +115,7 @@ Distro with ovirt-host installed
 %{_datarootdir}/%{name}/*-host-installed-pkglist*.txt
 %{_datarootdir}/%{name}/*-provision-host.sh
 
-%endif # %{with_host_installed}
+%endif
 
 %if %{with_he_installed}
 
@@ -131,4 +131,4 @@ Distro with ovirt-engine-appliance installed
 %{_datarootdir}/%{name}/*-he-installed-pkglist*.txt
 %{_datarootdir}/%{name}/*-provision-he.sh
 
-%endif # %{with_he_installed}
+%endif
