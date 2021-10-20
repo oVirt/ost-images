@@ -1,1 +1,2 @@
-el8-provision-he.sh.in
+#!/bin/bash -xe
+dnf -y --nogpgcheck install ovirt-engine-appliance ovirt-imageio-client
