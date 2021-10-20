@@ -1,1 +1,0 @@
-ost-images-node.sh
