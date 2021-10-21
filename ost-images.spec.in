@@ -8,7 +8,6 @@
 
 # Whether certain RPMs are built or not
 %{!?with_base: %global with_base 0}
-%{!?with_upgrade: %global with_upgrade 0}
 %{!?with_engine_installed: %global with_engine_installed 0}
 %{!?with_host_installed: %global with_host_installed 0}
 %{!?with_he_installed: %global with_he_installed 0}
@@ -37,7 +36,6 @@ BuildRequires: virt-install
 # we use for all RPMs. If we're using a preinstalled layer,
 # this should match the preinstalled version.
 %{!?base_version: %global base_version %{version}-%{release}}
-%{!?upgrade_version: %global upgrade_version %{version}-%{release}}
 
 %description
 VM images needed to run OST
@@ -56,6 +54,7 @@ VM images needed to run OST
 
 %package %{distro}-base
 Summary: Bare distro installation image with ssh key for root injected
+Obsoletes: %{name}-%{distro}-upgrade < %{base_version}
 
 %description %{distro}-base
 Bare distro installation image with ssh key for root injected
@@ -68,27 +67,12 @@ Bare distro installation image with ssh key for root injected
 
 %endif
 
-%if %{with_upgrade}
-
-%package %{distro}-upgrade
-Summary: Bare distro with packages up to date
-Requires: %{name}-%{distro}-base = %{base_version}
-
-%description %{distro}-upgrade
-Bare distro with packages up to date
-
-%files %{distro}-upgrade
-%attr(444, -, -) %{_datarootdir}/%{name}/*-upgrade.qcow2
-%{_datarootdir}/%{name}/*-upgrade-pkglist*.txt
-
-%endif
-
 %if %{with_engine_installed}
 
 %package %{distro}-engine-installed
 Summary: Distro with ovirt-engine installed
-Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
-Obsoletes: %{name}-%{distro}-engine-deps-installed < %{upgrade_version}
+Requires: %{name}-%{distro}-base = %{base_version}
+Obsoletes: %{name}-%{distro}-engine-deps-installed < %{base_version}
 
 %description %{distro}-engine-installed
 Distro with ovirt-engine installed
@@ -104,8 +88,8 @@ Distro with ovirt-engine installed
 
 %package %{distro}-host-installed
 Summary: Distro with ovirt-host installed
-Requires: %{name}-%{distro}-upgrade = %{upgrade_version}
-Obsoletes: %{name}-%{distro}-host-deps-installed < %{upgrade_version}
+Requires: %{name}-%{distro}-base = %{base_version}
+Obsoletes: %{name}-%{distro}-host-deps-installed < %{base_version}
 
 %description %{distro}-host-installed
 Distro with ovirt-host installed

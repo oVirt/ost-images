@@ -30,31 +30,19 @@ CIRROS_URL := http://glance.ovirt.org:9292/v2/images/6d5ca10c-ffbc-4a7a-91bf-252
 # Only removing layers from the bottom is supported - you can't i.e.
 # build the "base" layer, but skip the "upgrade" layer.
 BUILD_BASE := $(if $(_USING_ISO),$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-base)),yes)
-BUILD_UPGRADE := $(if $(BUILD_BASE),yes,$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-upgrade)))
 
-# If the 'upgrade' layer is marked to be built, then we assume that
-# '{engine,host}-installed' layers are also desired.
-# Similar logic applies to 'he-installed' layer.
-BUILD_ENGINE_INSTALLED := $(if $(BUILD_UPGRADE),yes,)
-BUILD_HOST_INSTALLED := $(if $(BUILD_UPGRADE),yes,)
-BUILD_HE_INSTALLED := $(if $(BUILD_HOST_INSTALLED),yes,)
+BUILD_ENGINE_INSTALLED := yes
+BUILD_HOST_INSTALLED := yes
+BUILD_HE_INSTALLED := yes
 
 # When using preinstalled images these point to prefixes
 # of installed RPMs (usually '/usr/share/ost-images'), otherwise
 # they're empty strings.
 _BASE_IMAGE_PREFIX := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-base)/$(PACKAGE_NAME)/)
-_UPGRADE_IMAGE_PREFIX := $(if $(BUILD_UPGRADE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-upgrade)/$(PACKAGE_NAME)/)
 
 # When using preinstalled images these have the values of the RPM versions,
 # otherwise they're empty strings. We need these in the spec to define proper dependencies.
 _BASE_IMAGE_VERSION := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-base))
-_UPGRADE_IMAGE_VERSION := $(if $(BUILD_UPGRADE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-upgrade))
-
-# Whether to build a real upgrade layer. Upgrade layer doesn't really make
-# sense in scenarios where you build from nightly repos.
-# Can be overriden by running with 'make DUMMY_UPGRADE=...'. Any non-empty
-# string will be treated as true and an empty string as false.
-DUMMY_UPGRADE := $(if $(_USING_ISO),,yes)
 
 # These variables point to scripts that provision "engine-installed"
 # and "host-installed" layers. Can be overriden by running with i.e. 'make PROVISION_HOST_SCRIPT=...'
