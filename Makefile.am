@@ -1,16 +1,16 @@
-include mk/constants.mk
-include mk/vars.mk
-include mk/pkglist.mk
+include makefiles/constants.mk
+include makefiles/vars.mk
+include makefiles/pkglist.mk
 
-BASE_MAKEFILE := $(if $(BUILD_BASE),mk/built-base.mk,mk/preinstalled-base.mk)
-UPGRADE_MAKEFILE := $(if $(BUILD_UPGRADE),mk/built-upgrade.mk,mk/preinstalled-upgrade.mk)
+BASE_MAKEFILE := $(if $(BUILD_BASE),makefiles/built-base.mk,makefiles/preinstalled-base.mk)
+UPGRADE_MAKEFILE := $(if $(BUILD_UPGRADE),makefiles/built-upgrade.mk,makefiles/preinstalled-upgrade.mk)
 
 include $(BASE_MAKEFILE)
 include $(UPGRADE_MAKEFILE)
 
-include mk/engine-installed.mk
-include mk/host-installed.mk
-include mk/he-installed.mk
+include makefiles/engine-installed.mk
+include makefiles/host-installed.mk
+include makefiles/he-installed.mk
 
 ost-images.spec: ost-images.spec.in
 	sed 's/[@]PACKAGE_RELEASE[@]/$(PACKAGE_RELEASE)/g' $< >$@
