@@ -12,6 +12,7 @@
 		--run "$*-provision-host.sh" \
 		$(_RESTORE_REGULAR_DNF_CACHE) \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
+		--run-command "setfiles -F -m -v $(SE_CONTEXT) $(PARTITIONS)" \
 		--selinux-relabel
 	mv $@.tmp $@
 	virt-cat -a $@ /tmp/builder.log | tail -20

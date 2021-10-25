@@ -14,7 +14,7 @@ REPO_ROOT := "http://mirror.centos.org/centos/8-stream/"
 _USING_ISO := $(findstring .iso,$(INSTALL_URL))
 # The virtual size of the disk.
 # Since qcows are sparse they only use as much space as was really written to them.
-DISK_SIZE := 19G
+DISK_SIZE := 20G
 # Whether or not to run 'virt-sparsify' on the base image.
 # This reduces the image size significantly,
 # but requires the same amount of free space available as defined by 'DISK_SIZE' variable.
@@ -52,3 +52,10 @@ PROVISION_HE_SCRIPT := $(DISTRO)-provision-he.sh.in
 
 # This resolves to either smth like 'el8.iso' for ISOs or url for repository urls
 _LOCATION := $(if $(_USING_ISO),$(DISTRO).iso,$(INSTALL_URL))
+
+# Location of SELinux context
+SE_CONTEXT := /etc/selinux/targeted/contexts/files/file_contexts
+# List of all partitions (excepet for root /, that is handled by
+# --selinux-relabel), virt-customize/setfiles? is not able to relabel
+# mounted partitions. We need to relabel them explicitly
+PARTITIONS := /boot /var /var/log /var/log/audit /var/tmp /home
