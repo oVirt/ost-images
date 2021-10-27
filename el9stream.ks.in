@@ -1,0 +1,73 @@
+text --non-interactive
+lang en_US.UTF-8
+keyboard us
+rootpw  --plaintext 123456
+sshkey --username=root "%SSH_PUB_KEY%"
+firewall --service=ssh
+authselect --enableshadow --passalgo=sha512 --enablefingerprint
+selinux --enforcing
+timezone Europe/Prague
+network --bootproto=dhcp
+poweroff
+
+# storage
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto consoleblank=0 net.ifnames=0 console=hvc0"
+zerombr
+clearpart --all
+part /boot --size=256
+part / --grow --size=8192 --fsoptions="noatime"
+part swap --size 4096
+
+# repos
+repo --name=rhel-9-baseos-rpms --baseurl=%REPO_ROOT%/BaseOS/x86_64/os/
+repo --name=rhel-9-appstream-rpms --baseurl=%REPO_ROOT%/AppStream/x86_64/os/
+# TODO: reenable once available in el9stream
+# module --name 389-ds
+
+
+## PACKAGES
+%packages
+-plymouth
+bind-utils
+net-snmp
+python3
+sysstat
+tar
+tcpdump
+vim
+wget
+yum-utils
+# for storage setup
+iscsi-initiator-utils
+lvm2
+targetcli
+nfs-utils
+rpcbind
+# for aaa tests from 389-ds module
+# 389-ds-base
+# 389-ds-base-legacy-tools
+%end
+
+## OS POSTINSTALL
+%post --nochroot
+cp /etc/resolv.conf /mnt/sysimage/etc/resolv.conf
+%end
+
+%post
+# get kernel arguments
+set -- `cat /proc/cmdline`
+for I in $*; do case "$I" in *=*) eval $I;; esac; done
+
+# install rpm gpg key
+for I in /etc/pki/rpm-gpg/*; do rpm --import $I; done
+
+# openssh
+sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;s/^#PermitRootLogin.*/PermitRootLogin yes/g;' /etc/ssh/sshd_config
+
+# history
+echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
+
+# clean repo metadata for url-based builds
+dnf clean all
+
+%end
