@@ -1,2 +1,2 @@
-pycurl
+ovirt-engine-sdk-python
 ovirt-imageio
