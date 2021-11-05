@@ -4,6 +4,9 @@ DISTRO=$1
 
 [[ -z $DISTRO ]] && { echo "Please enter distro version!"; exit 1; }
 
+# Make sure that there is no previous container image with same name
+podman image rm -f $DISTRO-ansible-executor || true
+
 # Build ansible execution environment
 ansible-builder build -t $DISTRO-ansible-executor -f ./build-ansible-ee/execution-environment.yml
 
