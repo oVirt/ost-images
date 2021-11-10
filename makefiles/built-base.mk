@@ -52,6 +52,8 @@
 	virt-customize \
 		-a $@.tmp \
 		--copy-in ${NM_STABLE_IPV6_CONF}:${NM_CONF_DIR} \
+#		Download the oscap xml for RHEL8 so the report can run in "offline" mode
+		--run-command "curl -L -o /root/$(RHEL8_SECURITY_XML_NAME) $(RHEL8_SECURITY_XML_URL)" \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--run-command "setfiles -F -m -v $(SE_CONTEXT) $(PARTITIONS)" \
 		--selinux-relabel
