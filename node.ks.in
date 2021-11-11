@@ -1,4 +1,4 @@
-timezone --utc Etc/UTC
+timezone --utc Europe/Prague
 lang en_US.UTF-8
 keyboard us
 auth --enableshadow --passalgo=sha512
