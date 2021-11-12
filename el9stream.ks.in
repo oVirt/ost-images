@@ -15,8 +15,14 @@ bootloader --location=mbr --driveorder=vda --append="crashkernel=auto consolebla
 zerombr
 clearpart --all
 part /boot --size=256
-part / --grow --size=8192 --fsoptions="noatime"
+part / --grow --size=6120 --fsoptions="noatime"
 part swap --size 4096
+part /home --size=128
+part /tmp --size=128
+part /var --size=1024
+part /var/log --size=512
+part /var/log/audit --size=256
+part /var/tmp --size=9220
 
 # repos
 repo --name=rhel-9-baseos-rpms --baseurl=%REPO_ROOT%/BaseOS/x86_64/os/
