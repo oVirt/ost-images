@@ -53,6 +53,7 @@
 	virt-customize \
 		-a $@.tmp \
 		--copy-in ${NM_STABLE_IPV6_CONF}:${NM_CONF_DIR} \
+		--run-command "chown root:root ${NM_CONF_DIR}${NM_STABLE_IPV6_CONF}" \
 		--run-command "curl -L -o /root/$(RHEL8_SECURITY_XML_NAME) $(RHEL8_SECURITY_XML_URL)" \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--run-command "setfiles -F -m -v $(SE_CONTEXT) $(PARTITIONS)" \
