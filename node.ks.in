@@ -1,3 +1,14 @@
+%pre
+cd /tmp
+if [ -e "/run/install/repo/ovirt-node-ng-image.squashfs.img" ]; then
+    ln -s /run/install/repo/ovirt-node-ng-image.squashfs.img /tmp/squashfs
+else
+    rpm2cpio /run/install/repo/Packages/redhat-virtualization-host-image-update*|cpio -ivd
+    squashfs=$(find|grep squashfs|grep -v meta)
+    ln -s $squashfs /tmp/squashfs
+fi
+%end
+
 timezone --utc Europe/Prague
 lang en_US.UTF-8
 keyboard us
@@ -12,7 +23,9 @@ clearpart --all --initlabel --disklabel=gpt
 autopart --type=thinp
 bootloader --timeout=1 --append="crashkernel=auto consoleblank=0 net.ifnames=0 console=ttyS0,115200n8"
 
-liveimg --url=file:///run/install/repo/ovirt-node-ng-image.squashfs.img
+liveimg --url=file:///tmp/squashfs
+
+%OPENSCAP_PROFILE%
 
 %post --erroronfail
 exec > /dev/ttyS0 2>&1
@@ -41,7 +54,13 @@ mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
 nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
 # --repo is mainly an optimization, also helps preventing some build failures -
 # if they are due to other repos being inaccessible.
-nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=8 install -y ovirt-engine-appliance https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/01044152-python-coverage/python3-coverage-4.5.4-3.el8.x86_64.rpm
+if [ -e "/run/install/repo/ovirt-node-ng-image.squashfs.img" ]; then
+    nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=8 install -y ovirt-engine-appliance https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/01044152-python-coverage/python3-coverage-4.5.4-3.el8.x86_64.rpm
+else
+# TODO extra update needed for 4.4 based images with 4.5 rhvm-appliance. remove once we have a proper 4.5 RHVH
+    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck --disableplugin versionlock update -y ovirt-hosted-engine-setup
+    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage
+fi
 nsenter --root=/tmp/rw_layer sed -i /^cachedir/d /etc/dnf/dnf.conf
 umount /tmp/rw_layer/dnftmp
 rmdir /tmp/rw_layer/dnftmp

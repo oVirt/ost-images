@@ -59,6 +59,13 @@ SE_CONTEXT := /etc/selinux/targeted/contexts/files/file_contexts
 # --selinux-relabel), virt-customize/setfiles? is not able to relabel
 # mounted partitions. We need to relabel them explicitly
 PARTITIONS := /boot /var /var/log /var/log/audit /var/tmp /home
+# OpenSCAP profile to set - example for RHEL 8 DISA STIG:
+# %addon org_fedora_oscap
+# content-type = scap-security-guide
+# profile = xccdf_org.ssgproject.content_profile_stig
+# %end
+# or xccdf_org.ssgproject.content_profile_rhvh-stig (for RHVH embedded profile)
+OPENSCAP_PROFILE := ""
 # Name of the RHEL8 XML needed by oscap offline runs
 RHEL8_SECURITY_XML_NAME := security-data-oval-com.redhat.rhsa-RHEL8.xml
 # Url of the RHEL8 XML needed by oscap offline runs

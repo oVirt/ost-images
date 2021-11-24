@@ -13,6 +13,7 @@
 	sed \
 		-e "s|%REPO_ROOT%|$(REPO_ROOT)|" \
 		-e "s|%SSH_PUB_KEY%|${shell cat $*_id_rsa.pub}|" \
+		-e "s|%OPENSCAP_PROFILE%|$(OPENSCAP_PROFILE)|" \
 		$*.ks.in > $@
 
 %-base.qcow2: CONSOLE_LOG=$*-base-console.log
