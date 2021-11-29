@@ -20,10 +20,10 @@
 
 %-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks
 	qemu-img create -f qcow2 $@.tmp $(DISK_SIZE)
-#	Qemu runs with lowered privileges so if the build
-#	is done by root, the image is created with 664
-#	permissions and qemu is unable to write to it.
-#	This is fixed on RPM level.
+	# Qemu runs with lowered privileges so if the build
+	# is done by root, the image is created with 664
+	# permissions and qemu is unable to write to it.
+	# This is fixed on RPM level.
 	chmod 666 $@.tmp
 	# node image build with the engine appliance needs lots of memory,
 	# also because we put dnf cache on tmpfs. 3072 MiB failed, 6144 worked.
@@ -50,12 +50,10 @@
 				tail -20 ${CONSOLE_LOG}; \
 				exit 1; \
 			}
-#	Also download the oscap xml for RHEL8 so the report can run in "offline" mode eveywhere
+	# Run customization common to all images
 	virt-customize \
 		-a $@.tmp \
-		--copy-in ${NM_STABLE_IPV6_CONF}:${NM_CONF_DIR} \
-		--run-command "chown root:root ${NM_CONF_DIR}${NM_STABLE_IPV6_CONF}" \
-		--run-command "curl -L -o /root/$(RHEL8_SECURITY_XML_NAME) $(RHEL8_SECURITY_XML_URL)" \
+		--run provision-base.sh \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--run-command "setfiles -F -m -v $(SE_CONTEXT) $(PARTITIONS)" \
 		--selinux-relabel

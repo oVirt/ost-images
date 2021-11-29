@@ -46,6 +46,7 @@ _BASE_IMAGE_VERSION := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{VERSI
 
 # These variables point to scripts that provision "engine-installed"
 # and "host-installed" layers. Can be overriden by running with i.e. 'make PROVISION_HOST_SCRIPT=...'
+PROVISION_BASE_SCRIPT := provision-base.sh
 PROVISION_ENGINE_SCRIPT := $(DISTRO)-provision-engine.sh.in
 PROVISION_HOST_SCRIPT := $(DISTRO)-provision-host.sh.in
 PROVISION_HE_SCRIPT := $(DISTRO)-provision-he.sh.in
@@ -66,7 +67,3 @@ PARTITIONS := /boot /var /var/log /var/log/audit /var/tmp /home
 # %end
 # or xccdf_org.ssgproject.content_profile_rhvh-stig (for RHVH embedded profile)
 OPENSCAP_PROFILE := ""
-# Name of the RHEL8 XML needed by oscap offline runs
-RHEL8_SECURITY_XML_NAME := security-data-oval-com.redhat.rhsa-RHEL8.xml
-# Url of the RHEL8 XML needed by oscap offline runs
-RHEL8_SECURITY_XML_URL := https://www.redhat.com/security/data/oval/com.redhat.rhsa-RHEL8.xml

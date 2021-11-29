@@ -14,7 +14,3 @@ _RESTORE_REGULAR_DNF_CACHE := --edit '/etc/dnf/dnf.conf:s/^cachedir.*$$//'
 # Where to cache libvirt and libguestfs runtime, use per-build directory cache rather than the default ~/.cache
 XDG_CACHE_HOME := $(abs_builddir)/.cache
 export XDG_CACHE_HOME
-
-# NetworkManager drop-in config for stable ipv6 addresses
-NM_STABLE_IPV6_CONF := 10-stable-ipv6-addr.conf
-NM_CONF_DIR := /etc/NetworkManager/conf.d/
