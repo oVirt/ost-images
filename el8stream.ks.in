@@ -53,6 +53,8 @@ rpcbind
 389-ds-base-legacy-tools
 %end
 
+%OPENSCAP_PROFILE%
+
 ## OS POSTINSTALL
 %post --nochroot
 cp /etc/resolv.conf /mnt/sysimage/etc/resolv.conf
@@ -67,7 +69,7 @@ for I in $*; do case "$I" in *=*) eval $I;; esac; done
 for I in /etc/pki/rpm-gpg/*; do rpm --import $I; done
 
 # openssh
-sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;' /etc/ssh/sshd_config
+sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;s/^#PermitRootLogin.*/PermitRootLogin yes/g;' /etc/ssh/sshd_config
 
 # history
 echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile

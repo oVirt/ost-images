@@ -54,6 +54,8 @@ rpcbind
 # 389-ds-base-legacy-tools
 %end
 
+%OPENSCAP_PROFILE%
+
 ## OS POSTINSTALL
 %post --nochroot
 cp /etc/resolv.conf /mnt/sysimage/etc/resolv.conf
