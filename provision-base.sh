@@ -27,3 +27,6 @@ name=dummy
 gpgcheck=0
 baseurl=/etc/yum.repos.d/ost-dummy-repo
 EOF
+
+# Cause journal logs to persist after reboot.
+mkdir -p /var/log/journal
