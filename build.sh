@@ -34,7 +34,9 @@ elif [ $DISTRO = "node" ]; then
     NODE_URL_LATEST_VERSION=$(curl --fail "${NODE_URL_BASE}" | sed -n 's;.*a href="\([0-9.-]*\)/.*;\1;p' | sort | tail -1)
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}/${NODE_URL_DIST}/ovirt-node-ng-installer-${NODE_URL_LATEST_VERSION}.${NODE_URL_DIST}.iso || exit 1
 elif [ $DISTRO = "rhel8" ]; then
-    OPENSCAP_PROFILE='%addon org_fedora_oscap\ncontent-type = scap-security-guide\nprofile = xccdf_org.ssgproject.content_profile_stig\n%end'
+    # TODO we cannot use the profile on RHVH until it is fixed, the current one blocks IPv6 entirely and that breaks our assumptions on dual stack
+    # A new profile is expected in RHEL 8.6
+    # OPENSCAP_PROFILE='%addon org_fedora_oscap\ncontent-type = scap-security-guide\nprofile = xccdf_org.ssgproject.content_profile_stig\n%end'
     for i in rhel8-provision-engine.sh.in rhel8-provision-host.sh.in; do
         sed "s|%BUILD%|$RHEL8_BUILD|g" $i.in > $i
     done
