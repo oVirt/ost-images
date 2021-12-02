@@ -42,8 +42,8 @@ gen-VERSION:
 dist-hook: gen-VERSION
 
 clean-local:
-	-virsh destroy $(DISTRO)-base
-	-virsh undefine $(DISTRO)-base
+	virsh list --name | grep -q "^$(DISTRO)-base$$" && virsh destroy $(DISTRO)-base || :
+	virsh list --name --inactive | grep -q "^$(DISTRO)-base$$" && virsh undefine $(DISTRO)-base || :
 
 dist_image_DATA = \
 	$(if $(BUILD_BASE),$(DISTRO)-base-pkglist.txt) \
