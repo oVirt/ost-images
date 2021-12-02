@@ -1,13 +1,13 @@
 #!/bin/bash -xe
-dnf install -y dnf-utils "https://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
+
+dnf copr enable -y ovirt/ovirt-master-snapshot
+dnf install -y ovirt-release-master
 
 # TODO: Remove once release RPM enables these properly on el9stream
 dnf config-manager --set-enabled crb
 dnf config-manager --set-enabled resilientstorage
 
-dnf config-manager --add-repo "https://resources.ovirt.org/repos/ovirt/tested/master/rpm/el9/"
-
-dnf -y --nogpgcheck install \
+dnf -y install \
     ovirt-host \
     python3-coverage
 # We install NetworkManager-config-server by default with
