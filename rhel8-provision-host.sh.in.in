@@ -4,8 +4,6 @@ pushd /etc/yum.repos.d
 curl --fail -O %BUILD%/api/rhel_86_host_x86.repo
 curl --fail -O %BUILD%/api/rhv_45_host.repo
 curl --fail -O %BUILD%/api/rhv_nightly.repo
-dnf module reset -y virt
-dnf module enable -y virt:av
 popd
 
 dnf -y --nogpgcheck install ovirt-host python3-coverage vdsm
