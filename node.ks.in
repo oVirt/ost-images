@@ -25,7 +25,7 @@ bootloader --timeout=1 --append="crashkernel=auto consoleblank=0 net.ifnames=0 c
 
 liveimg --url=file:///tmp/squashfs
 
-%OPENSCAP_PROFILE%
+%OPENSCAP_PROFILE_SNIPPET%
 
 %post --erroronfail
 exec > /dev/ttyS0 2>&1
@@ -64,6 +64,10 @@ else
     # if they are due to other repos being inaccessible.
     nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=8 install -y ovirt-engine-appliance https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/01044152-python-coverage/python3-coverage-4.5.4-3.el8.x86_64.rpm
 fi
+
+# write down which OpenSCAP profile is set
+nsenter --root=/tmp/rw_layer echo "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
+
 nsenter --root=/tmp/rw_layer sed -i /^cachedir/d /etc/dnf/dnf.conf
 umount /tmp/rw_layer/dnftmp
 rmdir /tmp/rw_layer/dnftmp

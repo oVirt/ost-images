@@ -53,7 +53,7 @@ rpcbind
 389-ds-base-legacy-tools
 %end
 
-%OPENSCAP_PROFILE%
+%OPENSCAP_PROFILE_SNIPPET%
 
 ## OS POSTINSTALL
 %post --nochroot
@@ -85,6 +85,9 @@ echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 # DISA STIG profile adds nfs-utils to deny list, it needs to be installed
 # after the profile is configured
 dnf --repo=tmp --repofrompath tmp,%REPO_ROOT%/BaseOS/x86_64/os/ -y install nfs-utils
+
+# write down which OpenSCAP profile is set
+echo "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
 
 # clean repo metadata for url-based builds
 dnf clean all

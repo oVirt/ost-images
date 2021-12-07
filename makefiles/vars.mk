@@ -66,4 +66,4 @@ PARTITIONS := /boot /var /var/log /var/log/audit /var/tmp /home
 # profile = xccdf_org.ssgproject.content_profile_stig
 # %end
 # or xccdf_org.ssgproject.content_profile_rhvh-stig (for RHVH embedded profile)
-OPENSCAP_PROFILE := ""
+OPENSCAP_PROFILE_SNIPPET := $(if $(OPENSCAP_PROFILE),%addon org_fedora_oscap\ncontent-type = scap-security-guide\nprofile = $(OPENSCAP_PROFILE)\n%end,)

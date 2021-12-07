@@ -10,6 +10,7 @@
 # RHEL8 - RHEL 8 compose repo, must have BaseOS/x86_64/os/images subdir with bootable image. Used for rhel8 distro.
 # RHEL8_BUILD - RHV build repo. Used for rhel8 distro.
 # RHVM_REPO - repo for additional RHV packages like rhvm-appliance. Used only for rhvh distro.
+# OPENSCAP_PROFILE - set a profile during installation. Defaults to xccdf_org.ssgproject.content_profile_stig on rhel8.
 
 [[ -d ost-images ]] || { echo "missing ost-images subdir"; exit 1; }
 
@@ -27,7 +28,7 @@ if [ $DISTRO = "rhvh" ]; then
     NODE_IMG=rhvh.iso
     # TODO we cannot use the profile on RHVH until it is fixed, the current one blocks IPv6 entirely and that breaks our assumptions on dual stack
     # A new profile is expected in RHEL 8.6
-    # OPENSCAP_PROFILE='%addon org_fedora_oscap\ncontent-type = scap-security-guide\nprofile = xccdf_org.ssgproject.content_profile_rhvh-stig\n%end'
+    # [ -z ${OPENSCAP_PROFILE+x} ] && OPENSCAP_PROFILE="xccdf_org.ssgproject.content_profile_rhvh_stig" # when unset default to STIG, honor empty var
     LATEST=$(curl --fail ${NODE_URL_BASE} | grep 'dvd1.iso<' | sed -n 's;.*>\(.*\)<.*;\1;p')
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) "${NODE_URL_BASE}/${LATEST}" || exit 1
 elif [ $DISTRO = "node" ]; then
@@ -37,7 +38,10 @@ elif [ $DISTRO = "node" ]; then
     NODE_URL_LATEST_VERSION=$(curl --fail "${NODE_URL_BASE}" | sed -n 's;.*a href="\([0-9.-]*\)/.*;\1;p' | sort | tail -1)
     echo "latest node ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}/${NODE_URL_DIST}"
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}/${NODE_URL_DIST}/ovirt-node-ng-installer-${NODE_URL_LATEST_VERSION}.${NODE_URL_DIST}.iso || exit 1
+elif [ $DISTRO = "rhel8" ]; then
+    [ -z ${OPENSCAP_PROFILE+x} ] && OPENSCAP_PROFILE="xccdf_org.ssgproject.content_profile_stig" # when unset default to STIG, honor empty var
 fi
+echo "with OpenSCAP profile: $OPENSCAP_PROFILE"
 
 pushd ost-images
 rm -rf rpmbuild/RPMS/*
@@ -63,6 +67,7 @@ while [ $TRIES -gt 0 ]; do #try again once
         BUILD_HOST_INSTALLED=1 \
         BUILD_ENGINE_INSTALLED=1 \
         BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED} \
+        OPENSCAP_PROFILE="${OPENSCAP_PROFILE}" \
         rpm
   elif [ $DISTRO = "el8stream" ]; then
     time make \
@@ -73,6 +78,7 @@ while [ $TRIES -gt 0 ]; do #try again once
         BUILD_HOST_INSTALLED=1 \
         BUILD_ENGINE_INSTALLED=1 \
         BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED} \
+        OPENSCAP_PROFILE="${OPENSCAP_PROFILE}" \
         rpm
   elif [ $DISTRO = "el9stream" ]; then
     time make \
@@ -83,12 +89,12 @@ while [ $TRIES -gt 0 ]; do #try again once
         BUILD_HOST_INSTALLED=1 \
         BUILD_ENGINE_INSTALLED= \
         BUILD_HE_INSTALLED= \
+        OPENSCAP_PROFILE="${OPENSCAP_PROFILE}" \
         rpm
   elif [ $DISTRO = "rhel8" ]; then
-        OPENSCAP_PROFILE='%addon org_fedora_oscap\ncontent-type = scap-security-guide\nprofile = xccdf_org.ssgproject.content_profile_stig\n%end'
-        for i in rhel8-provision-engine.sh.in rhel8-provision-host.sh.in; do
-            sed "s|%BUILD%|$RHEL8_BUILD|g" $i.in > $i
-        done
+    for i in rhel8-provision-engine.sh.in rhel8-provision-host.sh.in; do
+        sed "s|%BUILD%|$RHEL8_BUILD|g" $i.in > $i
+    done
     time make \
         DISTRO=$DISTRO \
         REPO_ROOT=${RHEL8} \
