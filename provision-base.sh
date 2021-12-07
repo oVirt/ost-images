@@ -11,6 +11,51 @@ EOF
 # Download RHEL8 oscap XML needed by offline runs
 curl -L -o /root/security-data-oval-com.redhat.rhsa-RHEL8.xml https://www.redhat.com/security/data/oval/com.redhat.rhsa-RHEL8.xml
 
+# Ignored oscap rules for automatic testing
+ignored_oscap_rules=()
+
+# Should be resolved by RHV eventually BZ#2021802
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_package_krb5-workstation_removed)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_service_fapolicyd_enabled)
+
+# Ignored by profile eventually (https://github.com/ComplianceAsCode/content/pull/7961)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sudo_remove_nopasswd)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_package_gssproxy_removed)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_package_tuned_removed)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sshd_disable_root_login)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sysctl_net_ipv4_ip_forward)
+# Ignored by profile eventually (https://github.com/ComplianceAsCode/content/pull/7961), engine specific
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_xwindows_remove_packages)
+
+# OST has single DNS server
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_network_configure_name_resolution)
+# OST storage (/exports/nfs)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_mount_option_nodev_nonroot_local_partitions)
+# 389-ds-base installed only for OST
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_file_permissions_library_dirs)
+
+# No automatic remediation
+# McAfee Endpoint Security for Linux
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_package_mcafeetp_installed)
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_agent_mfetpd_running)
+# Local accounts without password
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_accounts_authorized_local_users)
+# SSSD needs to be configured manually
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sssd_enable_certmap)
+
+# BZ#2026301
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_chronyd_or_ntpd_set_maxpoll)
+
+# Based on https://github.com/ComplianceAsCode/content/blob/master/tests/ds_unselect_rules.sh
+DS=/usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml
+cp $DS /root || exit 1
+DS="/root/$(basename $DS)"
+
+for rule in ${ignored_oscap_rules[@]}; do
+  sed -i "/<.*Rule id=\"$rule/s/selected=\"true\"/selected=\"false\"/g" $DS || exit 1
+  sed -i "/<.*select idref=\"$rule/s/selected=\"true\"/selected=\"false\"/g" $DS || exit 1
+done
+
 # create a dummy repo - dnf is grumpy when it has no repos to work with
 mkdir -p /etc/yum.repos.d/ost-dummy-repo/repodata
 echo '<metadata packages="0"/>' > /etc/yum.repos.d/ost-dummy-repo/repodata/primary.xml
