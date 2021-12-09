@@ -48,13 +48,15 @@ ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_chronyd_or_ntpd_set_maxp
 
 # Based on https://github.com/ComplianceAsCode/content/blob/master/tests/ds_unselect_rules.sh
 DS=/usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml
-cp $DS /root || exit 1
-DS="/root/$(basename $DS)"
+if [[ -s $DS ]]; then
+  cp $DS /root || exit 1
+  DS="/root/$(basename $DS)"
 
-for rule in ${ignored_oscap_rules[@]}; do
-  sed -i "/<.*Rule id=\"$rule/s/selected=\"true\"/selected=\"false\"/g" $DS || exit 1
-  sed -i "/<.*select idref=\"$rule/s/selected=\"true\"/selected=\"false\"/g" $DS || exit 1
-done
+  for rule in ${ignored_oscap_rules[@]}; do
+    sed -i "/<.*Rule id=\"$rule/s/selected=\"true\"/selected=\"false\"/g" $DS || exit 1
+    sed -i "/<.*select idref=\"$rule/s/selected=\"true\"/selected=\"false\"/g" $DS || exit 1
+  done
+fi
 
 # create a dummy repo - dnf is grumpy when it has no repos to work with
 mkdir -p /etc/yum.repos.d/ost-dummy-repo/repodata
