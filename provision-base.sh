@@ -33,6 +33,8 @@ ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_network_configure_name_r
 ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_mount_option_nodev_nonroot_local_partitions)
 # 389-ds-base installed only for OST
 ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_file_permissions_library_dirs)
+# GPG checks cannot be enabled for OST repos
+ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_ensure_gpgcheck_never_disabled)
 
 # No automatic remediation
 # McAfee Endpoint Security for Linux
