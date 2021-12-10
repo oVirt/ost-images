@@ -87,7 +87,7 @@ echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 dnf --repo=tmp --repofrompath tmp,%REPO_ROOT%/BaseOS/x86_64/os/ -y install nfs-utils
 
 # write down which OpenSCAP profile is set
-echo "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
+echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
 
 # clean repo metadata for url-based builds
 dnf clean all

@@ -76,7 +76,7 @@ sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;s/^#PermitR
 echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 
 # write down which OpenSCAP profile is set
-echo "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
+echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
 
 # clean repo metadata for url-based builds
 dnf clean all
