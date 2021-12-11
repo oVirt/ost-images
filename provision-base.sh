@@ -9,7 +9,7 @@ ipv6.dhcp-iaid=mac
 EOF
 
 # Cache security profile and adjust it for OST
-if [ -n "$OPENSCAP_PROFILE" ]; then
+if [ -s /root/ost_images_openscap_profile ]; then
     # Download RHEL8 oscap XML needed by offline runs
     curl -L -o /root/security-data-oval-com.redhat.rhsa-RHEL8.xml https://www.redhat.com/security/data/oval/com.redhat.rhsa-RHEL8.xml
 
