@@ -37,6 +37,11 @@ if [ -s /root/ost_images_openscap_profile ]; then
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_file_permissions_library_dirs)
     # GPG checks cannot be enabled for OST repos
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_ensure_gpgcheck_never_disabled)
+    # OST is testing systemd-coredump
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_service_systemd-coredump_disabled)
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_coredump_disable_backtraces)
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_coredump_disable_storage)
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sysctl_kernel_core_pattern)
 
     # No automatic remediation
     # McAfee Endpoint Security for Linux
