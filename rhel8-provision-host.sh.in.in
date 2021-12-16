@@ -9,3 +9,11 @@ popd
 dnf -y --nogpgcheck install ovirt-host python3-coverage vdsm
 
 rm -f /usr/lib/NetworkManager/conf.d/00-server.conf
+
+#enable systemd-coredump
+systemctl unmask systemd-coredump.socket
+systemctl unmask systemd-coredump.service
+sed -i '/kernel.core_pattern/d' /etc/sysctl.conf
+sed -i '/ProcessSizeMax=0/d' /etc/systemd/coredump.conf
+sed -i '/Storage=none/d' /etc/systemd/coredump.conf
+rm -f /etc/sysctl.d/50-coredump.conf
