@@ -54,10 +54,10 @@ mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
 nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
 source /etc/os-release
 if [ "$ID" = "rhel" ]; then
-    # TODO update opescap since 8.5 doesn't support local files
-    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT%/../../../../../../rhel-8/nightly/RHEL-8/latest-RHEL-8.6/compose/AppStream/x86_64/os --nogpgcheck --disableplugin versionlock update -y openscap
-    # TODO extra update needed for 4.4 based images with 4.5 rhvm-appliance. remove once we have a proper 4.5 RHVH
-    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck --disableplugin versionlock update -y ovirt-hosted-engine-setup
+    # TODO extra update needed for vdsm 4.50.2
+    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck --disableplugin versionlock update -y vdsm
+    # TODO fix vdsm's broken lvm filter
+    nsenter --root=/tmp/rw_layer sed -i '/^filter/ s/filter =.*/filter = [ "a|.*|" ]/' /etc/lvm/lvm.conf
     nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage
 else
     # --repo is mainly an optimization, also helps preventing some build failures -
