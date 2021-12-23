@@ -6,7 +6,7 @@ sshkey --username=root "%SSH_PUB_KEY%"
 firewall --service=ssh
 authselect --enableshadow --passalgo=sha512 --enablefingerprint
 selinux --enforcing
-timezone Europe/Prague
+timezone --utc UTC
 network --bootproto=dhcp
 poweroff
 
