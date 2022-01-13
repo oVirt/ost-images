@@ -22,6 +22,9 @@ SPARSIFY_BASE := yes
 # CirrOS to be included in engine images for later image upload and use as a base for guest VMs
 CIRROS_URL := http://glance.ovirt.org:9292/v2/images/6d5ca10c-ffbc-4a7a-91bf-252ce43d9af9/file
 
+# Whether to use FIPS or not. To disable FIPS set this to an empty string
+USE_FIPS := yes
+
 # On/off switches for building layers. These options should have
 # sensible defaults i.e. if you have 'ost-images-el8-base' package installed,
 # then the default is not to build the base package.
