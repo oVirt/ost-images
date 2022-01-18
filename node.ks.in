@@ -54,10 +54,6 @@ mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
 nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
 source /etc/os-release
 if [ "$ID" = "rhel" ]; then
-    # TODO extra update needed for vdsm 4.50.2
-    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck --disableplugin versionlock update -y vdsm
-    # TODO fix vdsm's broken lvm filter
-    nsenter --root=/tmp/rw_layer sed -i '/^filter/ s/filter =.*/filter = [ "a|.*|" ]/' /etc/lvm/lvm.conf
     nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage
 else
     # --repo is mainly an optimization, also helps preventing some build failures -
