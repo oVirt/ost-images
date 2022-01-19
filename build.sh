@@ -14,6 +14,8 @@
 
 [[ -d ost-images ]] || { echo "missing ost-images subdir"; exit 1; }
 
+exit 777
+
 echo Building distro ${DISTRO:=el8stream}
 echo "with appliance: ${BUILD_HE_INSTALLED:=1}"
 echo "with node image url: ${NODE_URL_BASE:=https://resources.ovirt.org/repos/ovirt/tested/master/iso/ovirt-node-ng-installer/}"
