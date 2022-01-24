@@ -26,9 +26,7 @@ done
 # cache ovirt-node/rhvh image
 if [ $DISTRO = "rhvh" ]; then
     NODE_IMG=rhvh.iso
-    # TODO we cannot use the profile on RHVH until it is fixed, the current one blocks IPv6 entirely and that breaks our assumptions on dual stack
-    # A new profile is expected in RHEL 8.6
-    # [ -z ${OPENSCAP_PROFILE+x} ] && OPENSCAP_PROFILE="xccdf_org.ssgproject.content_profile_rhvh_stig" # when unset default to STIG, honor empty var
+    [ -z ${OPENSCAP_PROFILE+x} ] && OPENSCAP_PROFILE="xccdf_org.ssgproject.content_profile_stig" # when unset default to STIG, honor empty var
     LATEST=$(curl --fail ${NODE_URL_BASE} | grep 'dvd1.iso<' | sed -n 's;.*>\(.*\)<.*;\1;p')
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) "${NODE_URL_BASE}/${LATEST}" || exit 1
 elif [ $DISTRO = "node" ]; then
