@@ -90,6 +90,7 @@ while [ $TRIES -gt 0 ]; do #try again once
         BUILD_ENGINE_INSTALLED= \
         BUILD_HE_INSTALLED= \
         OPENSCAP_PROFILE="${OPENSCAP_PROFILE}" \
+        USE_FIPS= \
         rpm
   elif [ $DISTRO = "rhel8" ]; then
     for i in rhel8-provision-engine.sh.in rhel8-provision-host.sh.in; do
