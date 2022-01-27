@@ -1,4 +1,3 @@
 #!/bin/bash -xe
 dnf -y --nogpgcheck install ovirt-imageio-client
-# TODO use resources.ovirt.org until appliance is built in COPR or somewhere
-dnf -y --nogpgcheck --repo oea --repofrompath oea,https://resources.ovirt.org/repos/ovirt/tested/master/rpm/el8/ install ovirt-engine-appliance
+dnf -y --nogpgcheck install ovirt-engine-appliance
