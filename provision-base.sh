@@ -17,17 +17,7 @@ if [ -s /root/ost_images_openscap_profile ]; then
     ignored_oscap_rules=()
 
     # Should be resolved by RHV eventually BZ#2021802
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_package_krb5-workstation_removed)
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_service_fapolicyd_enabled)
-
-    # Ignored by profile eventually (https://github.com/ComplianceAsCode/content/pull/7961)
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sudo_remove_nopasswd)
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_package_gssproxy_removed)
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_package_tuned_removed)
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sshd_disable_root_login)
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sysctl_net_ipv4_ip_forward)
-    # Ignored by profile eventually (https://github.com/ComplianceAsCode/content/pull/7961), engine specific
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_xwindows_remove_packages)
 
     # OST has single DNS server
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_network_configure_name_resolution)
@@ -51,9 +41,6 @@ if [ -s /root/ost_images_openscap_profile ]; then
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_accounts_authorized_local_users)
     # SSSD needs to be configured manually
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sssd_enable_certmap)
-
-    # BZ#2026301
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_chronyd_or_ntpd_set_maxpoll)
 
     # Based on https://github.com/ComplianceAsCode/content/blob/master/tests/ds_unselect_rules.sh
     DS=ssg-rhel8-ds.xml
