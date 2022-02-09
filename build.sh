@@ -38,10 +38,15 @@ elif [ $DISTRO = "node" ]; then
     NODE_URL_LATEST_VERSION=$(curl --fail "${NODE_URL_BASE}" | sed -n 's;.*a href="\(ovirt-node-ng-installer-[0-9.-]*.'$NODE_URL_DIST'.iso\)\".*;\1;p' | grep "\.${NODE_URL_DIST}\." | sort | tail -1)
     echo "latest node ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}"
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION} || exit 1
-elif [ $DISTRO = "rhel8" ]; then
-    [ -z ${OPENSCAP_PROFILE+x} ] && OPENSCAP_PROFILE="xccdf_org.ssgproject.content_profile_stig" # when unset default to STIG, honor empty var
 fi
-echo "with OpenSCAP profile: $OPENSCAP_PROFILE"
+
+# validate OpenSCAP profile parameter
+if [ $DISTRO = "rhel8" -o $DISTRO = "rhvh" ]; then
+    echo "With OpenSCAP profile: ${OPENSCAP_PROFILE:-none}"
+else
+    echo "Distro doesn't work with OpenSCAP profiles properly, ignoring"
+    OPENSCAP_PROFILE=
+fi
 
 pushd ost-images
 rm -rf rpmbuild/RPMS/*
