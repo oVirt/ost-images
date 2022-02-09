@@ -16,7 +16,7 @@
 
 echo Building distro ${DISTRO:=el8stream}
 echo "with appliance: ${BUILD_HE_INSTALLED:=1}"
-echo "with node image url: ${NODE_URL_BASE:=https://resources.ovirt.org/repos/ovirt/tested/master/iso/ovirt-node-ng-installer/}"
+echo "with node image url: ${NODE_URL_BASE:=https://resources.ovirt.org/repos/ovirt/github-ci/ovirt-node-ng-image/}"
 
 # cache CentOS images
 [[ -n "${CENTOS_CACHE_URL}" ]] && for i in CentOS.iso CentOS-Stream.iso CentOS-Stream-9.iso; do
@@ -35,9 +35,9 @@ elif [ $DISTRO = "node" ]; then
     NODE_IMG=node.iso
     # Latest ovirt-node as built by https://jenkins.ovirt.org/job/ovirt-node-ng-image_master_build-artifacts-el8-x86_64
     NODE_URL_DIST=el8
-    NODE_URL_LATEST_VERSION=$(curl --fail "${NODE_URL_BASE}" | sed -n 's;.*a href="\([0-9.-]*\)/.*;\1;p' | sort | tail -1)
-    echo "latest node ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}/${NODE_URL_DIST}"
-    curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}/${NODE_URL_DIST}/ovirt-node-ng-installer-${NODE_URL_LATEST_VERSION}.${NODE_URL_DIST}.iso || exit 1
+    NODE_URL_LATEST_VERSION=$(curl --fail "${NODE_URL_BASE}" | sed -n 's;.*a href="\(ovirt-node-ng-installer-[0-9.-]*.'$NODE_URL_DIST'.iso\)\".*;\1;p' | grep "\.${NODE_URL_DIST}\." | sort | tail -1)
+    echo "latest node ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}"
+    curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION} || exit 1
 elif [ $DISTRO = "rhel8" ]; then
     [ -z ${OPENSCAP_PROFILE+x} ] && OPENSCAP_PROFILE="xccdf_org.ssgproject.content_profile_stig" # when unset default to STIG, honor empty var
 fi
