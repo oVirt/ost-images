@@ -1,0 +1,38 @@
+name: Cache CentOS images
+
+on:
+  workflow_dispatch:
+    inputs:
+      keep_workdir:
+        required: false
+
+jobs:
+  cache-centos:
+    needs: check
+    runs-on: image-builders
+    container:
+      image: quay.io/ovirt/buildcontainer:el9stream
+
+    steps:
+
+    - name: el8stream
+      run: |
+        curl --fail -L -o CentOS-Stream.iso http://isoredirect.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso
+
+    - name: Upload isos to resources.ovirt.org
+      uses: ovirt/ovirt-resources-upload-action@main
+      with:
+        username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
+        key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
+        source: CentOS-Stream.iso
+        target: github-ci/centos
+        cleanup: yes
+        # it should be always overwritten, but just in case...
+        keep_files_count: 1
+
+    - name: Clean up entire workdir
+      if: always()
+      run: |
+        [[ -z "${{ inputs.keep_workdir }}" ]] && rm -rf $PWD/*
+
