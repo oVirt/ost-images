@@ -2,7 +2,7 @@
 %{!?release: %global release @PACKAGE_RELEASE@}
 
 # RPM compression parameters
-%{!?xz_num_threads: %xz_num_threads 2}
+%{!?xz_num_threads: %global xz_num_threads 2}
 %global _source_payload w9T%{xz_num_threads}.xzdio
 %global _binary_payload w9T%{xz_num_threads}.xzdio
 
