@@ -13,7 +13,7 @@
 		--run-command "dnf download --downloaddir /var/tmp sysstat lm_sensors-libs.x86_64" \
 		$(_RESTORE_REGULAR_DNF_CACHE) \
 		--upload cirros.img:/var/tmp \
-		--run-command chown root:root /var/tmp/cirros.img \
+		--run-command "chown root:root /var/tmp/cirros.img" \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--run-command "setfiles -F -m -v $(SE_CONTEXT) $(PARTITIONS)" \
 		--selinux-relabel
