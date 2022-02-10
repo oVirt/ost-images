@@ -15,7 +15,8 @@ cirros.img:
 		$(_CHANGE_DNF_CACHE_TO_DEV_SHM) \
 		--run "$*-provision-engine.sh" \
 		$(_RESTORE_REGULAR_DNF_CACHE) \
-		--copy-in cirros.img:/var/tmp \
+		--upload cirros.img:/var/tmp \
+		--run-command chown root:root /var/tmp/cirros.img \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--run-command "setfiles -F -m -v $(SE_CONTEXT) $(PARTITIONS)" \
 		--selinux-relabel
