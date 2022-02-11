@@ -2,9 +2,6 @@ name: CI
 
 on:
   workflow_dispatch:
-    inputs:
-      keep_workdir:
-        required: false
 
   issue_comment:
     types: [created]
@@ -13,41 +10,57 @@ jobs:
   build-el8stream:
     runs-on: [ self-hosted, image-builders ]
     if: |
-      github.event.issue.pull_request &&
-      startsWith(github.event.comment.body, '/ci') &&
-      (
-        github.event.comment.author_association == 'MEMBER' ||
-        github.event.comment.author_association == 'COLLABORATOR'
+      github.event_name == 'workflow_dispatch' ||
+      ( github.event.issue.pull_request &&
+        startsWith(github.event.comment.body, '/ci') &&
+        (
+          github.event.comment.author_association == 'MEMBER' ||
+          github.event.comment.author_association == 'COLLABORATOR'
+        )
       )
     container:
       image: quay.io/ovirt/buildcontainer:el9stream
-      options: --group-add qemu --user build --workdir /home/build ---privileged
+      options: --group-add qemu --user build --privileged
 
     steps:
 
-    - uses: actions/checkout@v2
-
-    - name: Build
+    - name: Checkout
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        cd ..
+        cd /home/build
+        gh repo clone oVirt/ost-images -- -n --depth 1
+        cd ost-images
+        git fetch --depth 1 origin $GITHUB_REF
+        git checkout HEAD
+
+    - name: Build images
+      env:
+        LIBGUESTFS_BACKEND: direct
+        HOME: /home/build
+      run: |
+        cd /home/build
         curl --fail -O https://resources.ovirt.org/repos/ovirt/github-ci/centos/CentOS-Stream.iso
         DISTRO=el8stream ost-images/build.sh
 
-    - name: Upload rpm to resources.ovirt.org
+    - name: Upload rpms to resources.ovirt.org
       uses: ovirt/ovirt-resources-upload-action@main
+      env:
+        HOME: /home/build
       with:
         username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
         key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
         known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
-        source: rpmbuild/RPMS/x86_64/*.rpm
+        source: /home/build/ost-images/rpmbuild/RPMS/x86_64/*.rpm
         target: github-ci/ost-images
         cleanup: yes
         createrepo: yes
-        # keep 10 last rpms (not necessarily complete set of images) + repodata
-        keep_files_count: 11
+        # keep 20 last rpms (not necessarily complete set of images) + repodata
+        keep_files_count: 21
 
-    - name: Clean up entire workdir
-      if: always()
+    - name: Report back results
+      if: github.event.issue.pull_request
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        [[ -z "${{ inputs.keep_workdir }}" ]] && rm -rf $PWD/*
-
+        echo -e "Built images:\n$(for i in /home/build/ost-images/rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)" | gh pr comment -F -
