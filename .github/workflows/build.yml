@@ -5,12 +5,13 @@ on:
     inputs:
       keep_workdir:
         required: false
-on:
+
   issue_comment:
     types: [created]
 
 jobs:
-  check:
+  build-el8stream:
+    runs-on: [ self-hosted, image-builders ]
     if: |
       github.event.issue.pull_request &&
       startsWith(github.event.comment.body, '/ci') &&
@@ -18,10 +19,6 @@ jobs:
         github.event.comment.author_association == 'MEMBER' ||
         github.event.comment.author_association == 'COLLABORATOR'
       )
-
-  build-el8stream:
-    needs: check
-    runs-on: image-builders
     container:
       image: quay.io/ovirt/buildcontainer:el9stream
       options: --group-add qemu --user build --workdir /home/build ---privileged
@@ -30,7 +27,7 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - name: build
+    - name: Build
       run: |
         cd ..
         curl --fail -O https://resources.ovirt.org/repos/ovirt/github-ci/centos/CentOS-Stream.iso
