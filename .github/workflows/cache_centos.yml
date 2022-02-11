@@ -8,7 +8,7 @@ on:
 
 jobs:
   cache-centos:
-    runs-on: [ self-hosted, image-builders ]
+    runs-on: image-builders
     container:
       image: quay.io/ovirt/buildcontainer:el9stream
 
