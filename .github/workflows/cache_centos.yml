@@ -2,16 +2,10 @@ name: Cache CentOS images
 
 on:
   workflow_dispatch:
-    inputs:
-      keep_workdir:
-        required: false
 
 jobs:
   cache-centos:
-    runs-on: image-builders
-    container:
-      image: quay.io/ovirt/buildcontainer:el9stream
-
+    runs-on: ubuntu-latest
     steps:
 
     - name: el8stream
@@ -29,9 +23,3 @@ jobs:
         cleanup: yes
         # it should be always overwritten, but just in case...
         keep_files_count: 1
-
-    - name: Clean up entire workdir
-      if: always()
-      run: |
-        [[ -z "${{ inputs.keep_workdir }}" ]] && rm -rf $PWD/*
-
