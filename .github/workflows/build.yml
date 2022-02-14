@@ -57,6 +57,11 @@ jobs:
         createrepo: yes
         # keep 20 last rpms (not necessarily complete set of images) + repodata
         keep_files_count: 21
+        
+    - name: Upload console log to artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: /home/build/ost-images/*.log
 
     - name: Report back results
       if: github.event.issue.pull_request
