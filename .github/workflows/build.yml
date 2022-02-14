@@ -68,4 +68,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo -e "Built images:\n$(for i in /home/build/ost-images/rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)" | gh pr comment -F -
+        cd /home/build/ost-images
+        echo -e "Built images:\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)" | gh pr comment -F -
