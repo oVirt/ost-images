@@ -32,7 +32,7 @@ jobs:
         gh repo clone oVirt/ost-images -- -n --depth 1
         cd ost-images
         git fetch --depth 1 origin $GITHUB_REF
-        git checkout HEAD
+        git checkout FETCH_HEAD
 
     - name: Build images
       env:
