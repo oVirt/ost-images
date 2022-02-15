@@ -61,6 +61,7 @@ jobs:
     - name: Upload console log to artifacts
       uses: actions/upload-artifact@v2
       with:
+        name: console
         path: /home/build/ost-images/*.log
 
     - name: Report back results
