@@ -57,10 +57,17 @@ jobs:
         createrepo: yes
         # keep 20 last rpms (not necessarily complete set of images) + repodata
         keep_files_count: 21
+        
+    - name: Upload console log to artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: console
+        path: /home/build/ost-images/*.log
 
     - name: Report back results
       if: github.event.issue.pull_request
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo -e "Built images:\n$(for i in /home/build/ost-images/rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)" | gh pr comment -F -
+        cd /home/build/ost-images
+        echo -e "Built images:\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)" | gh pr comment -F -
