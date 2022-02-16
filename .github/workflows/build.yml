@@ -12,7 +12,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' ||
       ( github.event.issue.pull_request &&
-        startsWith(github.event.comment.body, '/ci') &&
+        startsWith(github.event.comment.body, '/build') &&
         (
           github.event.comment.author_association == 'MEMBER' ||
           github.event.comment.author_association == 'COLLABORATOR'
