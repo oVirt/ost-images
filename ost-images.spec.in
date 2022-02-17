@@ -44,7 +44,7 @@ VM images needed to run OST
 %setup
 
 %build
-%configure
+%configure --with-distro=%{distro}
 
 %install
 %make_install
