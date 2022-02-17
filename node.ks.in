@@ -12,7 +12,6 @@ fi
 timezone --utc UTC
 lang en_US.UTF-8
 keyboard us
-authselect minimal
 selinux --enforcing
 network --bootproto=dhcp
 firstboot --reconfig
