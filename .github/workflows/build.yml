@@ -18,6 +18,8 @@ jobs:
           github.event.comment.author_association == 'COLLABORATOR'
         )
       )
+    permissions:
+      pull-requests: write
     container:
       image: quay.io/ovirt/buildcontainer:el9stream
       options: --group-add qemu --user build --privileged
@@ -70,4 +72,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         cd /home/build/ost-images
-        echo -e "Built images:\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)" | gh pr comment -F -
+        MESSAGE="Built images:\\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo -n https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i)\\n; done)"
+        curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d "{\"body\": \"${MESSAGE}\"}" ${{github.event.issue.url}}/comments
