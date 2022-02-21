@@ -30,4 +30,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         MESSAGE="Built images"
-        curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d "{\“body\”: \“blah\”}" https://api.github.com/repos/oVirt/ost-images/issues/28/comments
+        curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d '{“body”: “blah”}' https://api.github.com/repos/oVirt/ost-images/issues/28/comments
