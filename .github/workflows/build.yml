@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-el8stream:
-    runs-on: [ self-hosted, image-builders ]
+    runs-on: ubuntu-latest
     if: |
       github.event_name == 'workflow_dispatch' ||
       ( github.event.issue.pull_request &&
