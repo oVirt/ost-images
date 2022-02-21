@@ -25,24 +25,14 @@ USE_FIPS := yes
 # On/off switches for building layers. These options should have
 # sensible defaults i.e. if you have 'ost-images-el8-base' package installed,
 # then the default is not to build the base package.
-# Can be overriden by running with i.e. 'make BUILD_BASE=...'.
+# Can be overriden by running with i.e. 'make BUILD_HE_INSTALLED=...'.
 # Any non-empty string will be treated as true and an empty string is treated as false.
 # Only removing layers from the bottom is supported - you can't i.e.
 # build the "base" layer, but skip the "upgrade" layer.
-BUILD_BASE := $(if $(_USING_ISO),$(findstring not installed,$(shell rpm -q $(PACKAGE_NAME)-$(DISTRO)-base)),yes)
-
+BUILD_BASE := yes
 BUILD_ENGINE_INSTALLED := yes
 BUILD_HOST_INSTALLED := yes
 BUILD_HE_INSTALLED := yes
-
-# When using preinstalled images these point to prefixes
-# of installed RPMs (usually '/usr/share/ost-images'), otherwise
-# they're empty strings.
-_BASE_IMAGE_PREFIX := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{INSTPREFIXES}' $(PACKAGE_NAME)-$(DISTRO)-base)/$(PACKAGE_NAME)/)
-
-# When using preinstalled images these have the values of the RPM versions,
-# otherwise they're empty strings. We need these in the spec to define proper dependencies.
-_BASE_IMAGE_VERSION := $(if $(BUILD_BASE),,$(shell rpm -q --queryformat '%{VERSION}-%{RELEASE}' $(PACKAGE_NAME)-$(DISTRO)-base))
 
 # These variables point to scripts that provision "engine-installed"
 # and "host-installed" layers. Can be overriden by running with i.e. 'make PROVISION_HOST_SCRIPT=...'

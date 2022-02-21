@@ -21,14 +21,14 @@
 
 %-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks
 	qemu-img create -f qcow2 $@.tmp $(DISK_SIZE)
-	# Qemu runs with lowered privileges so if the build
-	# is done by root, the image is created with 664
-	# permissions and qemu is unable to write to it.
-	# This is fixed on RPM level.
+#	Qemu runs with lowered privileges so if the build
+#	is done by root, the image is created with 664
+#	permissions and qemu is unable to write to it.
+#	This is fixed on RPM level.
 	chmod 666 $@.tmp
-	# node image build with the engine appliance needs lots of memory,
-	# also because we put dnf cache on tmpfs. 3072 MiB failed, 6144 worked.
-	# Didn't check what the minimum is currently.
+#	node image build with the engine appliance needs lots of memory,
+#	also because we put dnf cache on tmpfs. 3072 MiB failed, 6144 worked.
+#	Didn't check what the minimum is currently.
 	virt-install \
 		--name $(@:.qcow2=) \
 		--memory 6144 \
@@ -51,7 +51,7 @@
 				tail -20 ${CONSOLE_LOG}; \
 				exit 1; \
 			}
-	# Run customization common to all images
+#	Run customization common to all images
 	virt-customize \
 		-a $@.tmp \
 		--run provision-base.sh \
