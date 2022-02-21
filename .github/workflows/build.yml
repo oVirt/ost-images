@@ -28,5 +28,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         cd /home/build/ost-images
-               MESSAGE="Built images:\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)"
+               MESSAGE="Built images:\n$(for i in *; do echo blah; done)"
         curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d "{\“body\”: \“${MESSAGE}\”}" https://api.github.com/repos/oVirt/ost-images/issues/28/comments
