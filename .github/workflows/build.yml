@@ -73,4 +73,4 @@ jobs:
       run: |
         cd /home/build/ost-images
         MESSAGE="Built images:\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i); done)"
-        curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d "{\“body\”: \“${MESSAGE}\”}" ${{github.event.issue.url}}/comments
+        curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d "{\"body\": \"${MESSAGE}\"}" ${{github.event.issue.url}}/comments
