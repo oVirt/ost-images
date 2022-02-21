@@ -5,7 +5,6 @@ include makefiles/pkglist.mk
 BASE_MAKEFILE := $(if $(BUILD_BASE),makefiles/built-base.mk,makefiles/preinstalled-base.mk)
 
 include $(BASE_MAKEFILE)
-include $(UPGRADE_MAKEFILE)
 
 include makefiles/engine-installed.mk
 include makefiles/host-installed.mk
