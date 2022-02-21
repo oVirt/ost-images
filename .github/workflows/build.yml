@@ -8,6 +8,8 @@ on:
 
 jobs:
   build-el8stream:
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'workflow_dispatch' ||
