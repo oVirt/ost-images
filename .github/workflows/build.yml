@@ -24,7 +24,6 @@ jobs:
 
     steps:
     - name: Report back results
-      if: ! github.event.issue.pull_request
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
