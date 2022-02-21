@@ -18,6 +18,8 @@ jobs:
           github.event.comment.author_association == 'COLLABORATOR'
         )
       )
+    permissions:
+      pull-requests: write
     container:
       image: quay.io/ovirt/buildcontainer:el9stream
       options: --group-add qemu --user build --privileged
