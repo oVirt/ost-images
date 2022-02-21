@@ -74,11 +74,10 @@ localstatedir=/var
 TRIES=2
 while [ $TRIES -gt 0 ]; do #try again once
   make clean
-  BUILD_WHAT="BUILD_BASE=1 BUILD_HOST_INSTALLED=1 BUILD_ENGINE_INSTALLED=1 BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED}"
+  BUILD_WHAT="BUILD_HOST_INSTALLED=1 BUILD_ENGINE_INSTALLED=1 BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED}"
   if [ $DISTRO = "el8" ]; then
     time make \
         INSTALL_URL=../$IMAGE \
-        BUILD_BASE=1 \
         BUILD_HOST_INSTALLED=1 \
         BUILD_ENGINE_INSTALLED=1 \
         BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED} \
@@ -88,7 +87,6 @@ while [ $TRIES -gt 0 ]; do #try again once
     time make \
         REPO_ROOT=http://mirror.centos.org/centos/8-stream \
         INSTALL_URL=../$IMAGE \
-        BUILD_BASE=1 \
         BUILD_HOST_INSTALLED=1 \
         BUILD_ENGINE_INSTALLED=1 \
         BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED} \
@@ -98,7 +96,6 @@ while [ $TRIES -gt 0 ]; do #try again once
     time make \
         REPO_ROOT=https://composes.stream.centos.org/production/latest-CentOS-Stream/compose/ \
         INSTALL_URL=../$IMAGE \
-        BUILD_BASE=1 \
         BUILD_HOST_INSTALLED=1 \
         BUILD_ENGINE_INSTALLED= \
         BUILD_HE_INSTALLED= \
@@ -112,7 +109,6 @@ while [ $TRIES -gt 0 ]; do #try again once
     time make \
         REPO_ROOT=${RHEL8} \
         INSTALL_URL=${RHEL8}/BaseOS/x86_64/os/ \
-        BUILD_BASE=1 \
         BUILD_HOST_INSTALLED=1 \
         BUILD_ENGINE_INSTALLED=1 \
         BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED} \
@@ -125,7 +121,6 @@ while [ $TRIES -gt 0 ]; do #try again once
         INSTALL_URL=../$NODE_IMG \
         SPARSIFY_BASE=no \
         DISK_SIZE=80G \
-        BUILD_BASE=1 \
         BUILD_ENGINE_INSTALLED= \
         BUILD_HOST_INSTALLED= \
         BUILD_HE_INSTALLED= \

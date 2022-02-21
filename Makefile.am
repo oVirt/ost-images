@@ -2,10 +2,7 @@ include makefiles/constants.mk
 include makefiles/vars.mk
 include makefiles/pkglist.mk
 
-BASE_MAKEFILE := $(if $(BUILD_BASE),makefiles/built-base.mk,makefiles/preinstalled-base.mk)
-
-include $(BASE_MAKEFILE)
-
+include makefiles/base.mk
 include makefiles/engine-installed.mk
 include makefiles/host-installed.mk
 include makefiles/he-installed.mk
@@ -31,7 +28,7 @@ he: $(DISTRO)-he-installed.qcow2 $(DISTRO)-he-installed-pkglist.txt $(DISTRO)-he
 
 spec: ost-images.spec
 
-all: $(if $(BUILD_BASE),base) engine host he spec
+all: base engine host he spec
 
 gen-VERSION:
 	if test -d ../.git; then                                             \
@@ -45,11 +42,11 @@ clean-local:
 	virsh list --name --inactive | grep -q "^$(DISTRO)-base$$" && virsh undefine $(DISTRO)-base || :
 
 dist_image_DATA = \
-	$(if $(BUILD_BASE),$(DISTRO)-base-pkglist.txt) \
-	$(if $(BUILD_BASE),$(DISTRO)-base.qcow2) \
-	$(if $(BUILD_BASE),$(DISTRO).ks) \
-	$(if $(BUILD_BASE),$(DISTRO)_id_rsa) \
-	$(if $(BUILD_BASE),$(DISTRO)_id_rsa.pub) \
+	$(DISTRO)-base-pkglist.txt \
+	$(DISTRO)-base.qcow2 \
+	$(DISTRO).ks \
+	$(DISTRO)_id_rsa \
+	$(DISTRO)_id_rsa.pub \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed-pkglist-diff.txt) \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed-pkglist.txt) \
 	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed.qcow2) \
@@ -95,8 +92,6 @@ rpm: spec
 		--define "distro $(DISTRO)" \
 		--define "release $(PACKAGE_RELEASE)" \
 		--define "xz_num_threads $(XZ_NUM_THREADS)" \
-		--define "with_base $(if $(BUILD_BASE),1,0)" \
-		$(if $(_BASE_IMAGE_VERSION),--define "base_version $(_BASE_IMAGE_VERSION)") \
 		--define "with_engine_installed $(if $(BUILD_ENGINE_INSTALLED),1,0)" \
 		--define "with_host_installed $(if $(BUILD_HOST_INSTALLED),1,0)" \
 		--define "with_he_installed $(if $(BUILD_HE_INSTALLED),1,0)" \

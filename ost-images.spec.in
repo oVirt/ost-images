@@ -7,7 +7,6 @@
 %global _binary_payload w9T%{xz_num_threads}.xzdio
 
 # Whether certain RPMs are built or not
-%{!?with_base: %global with_base 0}
 %{!?with_engine_installed: %global with_engine_installed 0}
 %{!?with_host_installed: %global with_host_installed 0}
 %{!?with_he_installed: %global with_he_installed 0}
@@ -32,10 +31,7 @@ BuildRequires: make
 BuildRequires: qemu-img
 BuildRequires: virt-install
 
-# If we're building a layer by ourselves, this is simply the version
-# we use for all RPMs. If we're using a preinstalled layer,
-# this should match the preinstalled version.
-%{!?base_version: %global base_version %{version}-%{release}}
+%global base_version %{version}-%{release}
 
 %description
 VM images needed to run OST
@@ -48,9 +44,6 @@ VM images needed to run OST
 
 %install
 %make_install
-
-
-%if %{with_base}
 
 %package %{distro}-base
 Summary: Bare distro installation image with ssh key for root injected
@@ -65,7 +58,6 @@ Bare distro installation image with ssh key for root injected
 %attr(444, -, -) %{_datarootdir}/%{name}/*-base.qcow2
 %{_datarootdir}/%{name}/*-base-pkglist.txt
 
-%endif
 
 %if %{with_engine_installed}
 
