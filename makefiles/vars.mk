@@ -1,6 +1,3 @@
-# This can be overriden by running with 'make DISTRO=...'
-DISTRO := el8stream
-
 # How many threads you want to use when xzipping RPMs
 XZ_NUM_THREADS := 4
 

@@ -64,15 +64,19 @@ prefix=/usr
 libdir=$prefix/lib64
 sysconfdir=/etc
 localstatedir=/var
-./configure --prefix=$prefix --libdir=$libdir --sysconfdir=$sysconfdir --localstatedir=$localstatedir
+./configure \
+    --prefix=$prefix \
+    --libdir=$libdir \
+    --sysconfdir=$sysconfdir \
+    --localstatedir=$localstatedir \
+    --with-distro=$DISTRO
 
 TRIES=2
 while [ $TRIES -gt 0 ]; do #try again once
-  make DISTRO=$DISTRO clean
+  make clean
   BUILD_WHAT="BUILD_BASE=1 BUILD_HOST_INSTALLED=1 BUILD_ENGINE_INSTALLED=1 BUILD_HE_INSTALLED=${BUILD_HE_INSTALLED}"
   if [ $DISTRO = "el8" ]; then
     time make \
-        DISTRO=$DISTRO \
         INSTALL_URL=../$IMAGE \
         BUILD_BASE=1 \
         BUILD_HOST_INSTALLED=1 \
@@ -82,7 +86,6 @@ while [ $TRIES -gt 0 ]; do #try again once
         rpm
   elif [ $DISTRO = "el8stream" ]; then
     time make \
-        DISTRO=$DISTRO \
         REPO_ROOT=http://mirror.centos.org/centos/8-stream \
         INSTALL_URL=../$IMAGE \
         BUILD_BASE=1 \
@@ -93,7 +96,6 @@ while [ $TRIES -gt 0 ]; do #try again once
         rpm
   elif [ $DISTRO = "el9stream" ]; then
     time make \
-        DISTRO=$DISTRO \
         REPO_ROOT=https://composes.stream.centos.org/production/latest-CentOS-Stream/compose/ \
         INSTALL_URL=../$IMAGE \
         BUILD_BASE=1 \
@@ -108,7 +110,6 @@ while [ $TRIES -gt 0 ]; do #try again once
         sed "s|%BUILD%|$RHEL8_BUILD|g" $i.in > $i
     done
     time make \
-        DISTRO=$DISTRO \
         REPO_ROOT=${RHEL8} \
         INSTALL_URL=${RHEL8}/BaseOS/x86_64/os/ \
         BUILD_BASE=1 \
@@ -120,7 +121,6 @@ while [ $TRIES -gt 0 ]; do #try again once
   elif [ $DISTRO = "node" -o $DISTRO = "rhvh" ]; then
     # REPO_ROOT is just where "other stuff" like rhvm-appliance comes from. Used only for rhvh.
     time make \
-        DISTRO=$DISTRO \
         REPO_ROOT=${RHVM_REPO} \
         INSTALL_URL=../$NODE_IMG \
         SPARSIFY_BASE=no \

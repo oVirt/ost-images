@@ -36,6 +36,27 @@ AM_INIT_AUTOMAKE([foreign])
 
 AC_SUBST([imagedir], ['${datarootdir}/ost-images'])
 
+AC_ARG_WITH(
+    [distro],
+    [AS_HELP_STRING(
+        [--with-distro=DISTRO],
+        [the distro that you want to build, @<:@default=el8stream@:>@]
+    )],
+    ,
+    [with_distro="el8stream"]
+)
+AC_SUBST([DISTRO], ["${with_distro}"])
+
+AC_CONFIG_COMMANDS(
+    [report],
+    [
+        echo "-----"
+        echo "----- Will build distro: $DISTRO"
+        echo "-----"
+    ],
+    [DISTRO=$with_distro]
+)
+
 AC_OUTPUT([
     Makefile
 ])
