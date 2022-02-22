@@ -1,5 +1,5 @@
 %-provision-engine.sh:
-	cp $(PROVISION_ENGINE_SCRIPT) $@
+	$(PROVISION_SUBST_CMD) $(PROVISION_ENGINE_SCRIPT) > $@
 
 cirros.img:
 	curl -L -o cirros.img $(CIRROS_URL)

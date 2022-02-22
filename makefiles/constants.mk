@@ -14,3 +14,6 @@ _RESTORE_REGULAR_DNF_CACHE := --edit '/etc/dnf/dnf.conf:s/^cachedir.*$$//'
 # Where to cache libvirt and libguestfs runtime, use per-build directory cache rather than the default ~/.cache
 XDG_CACHE_HOME := $(abs_builddir)/.cache
 export XDG_CACHE_HOME
+
+# Command used to make substitutions in provisioning scripts
+PROVISION_SUBST_CMD := sed "s|%RHEL8_BUILD%|$$RHEL8_BUILD|g"

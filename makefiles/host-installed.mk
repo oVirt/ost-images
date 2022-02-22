@@ -1,5 +1,5 @@
 %-provision-host.sh:
-	cp $(PROVISION_HOST_SCRIPT) $@
+	$(PROVISION_SUBST_CMD) $(PROVISION_HOST_SCRIPT) > $@
 
 %-host-installed.qcow2: %-base.qcow2 %-provision-host.sh
 	qemu-img create -f qcow2 -F qcow2 -b $*-base.qcow2 $@.tmp

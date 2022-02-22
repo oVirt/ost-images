@@ -75,8 +75,6 @@ CLEANFILES = \
 	$(DISTRO)-provision-engine.sh \
 	$(DISTRO)-provision-host.sh \
 	$(DISTRO)-provision-he.sh \
-	rhel8-provision-engine.sh.in \
-	rhel8-provision-host.sh.in \
 	$(DIST_ARCHIVES) \
 	$(NULL)
 

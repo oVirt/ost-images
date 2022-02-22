@@ -103,9 +103,6 @@ while [ $TRIES -gt 0 ]; do #try again once
         USE_FIPS= \
         rpm
   elif [ $DISTRO = "rhel8" ]; then
-    for i in rhel8-provision-engine.sh.in rhel8-provision-host.sh.in; do
-        sed "s|%RHEL8_BUILD%|$RHEL8_BUILD|g" $i.in > $i
-    done
     time make \
         REPO_ROOT=${RHEL8} \
         INSTALL_URL=${RHEL8}/BaseOS/x86_64/os/ \

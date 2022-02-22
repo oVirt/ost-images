@@ -1,5 +1,5 @@
 %-provision-he.sh:
-	cp $(PROVISION_HE_SCRIPT) $@
+	$(PROVISION_SUBST_CMD) $(PROVISION_HE_SCRIPT) > $@
 
 %-he-installed.qcow2: %-host-installed.qcow2 %-provision-he.sh cirros.img
 	qemu-img create -f qcow2 -F qcow2 -b $*-host-installed.qcow2 $@.tmp
