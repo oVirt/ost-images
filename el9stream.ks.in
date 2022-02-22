@@ -78,6 +78,9 @@ echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 # write down which OpenSCAP profile is set
 echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
 
+# Permissive selinux for openvswitch BZ 2054323
+semanage permissive -a openvswitch_t
+
 # clean repo metadata for url-based builds
 dnf clean all
 
