@@ -1,9 +1,9 @@
 #!/bin/bash -xe
 
 pushd /etc/yum.repos.d
-curl --fail -O %BUILD%/api/rhel_86_engine_x86.repo
-curl --fail -O %BUILD%/api/rhv_45_engine.repo
-curl --fail -O %BUILD%/api/rhv_nightly.repo
+curl --fail -O %RHEL8_BUILD%/api/rhel_86_engine_x86.repo
+curl --fail -O %RHEL8_BUILD%/api/rhv_45_engine.repo
+curl --fail -O %RHEL8_BUILD%/api/rhv_nightly.repo
 dnf module enable -y postgresql:12 pki-deps
 popd
 
