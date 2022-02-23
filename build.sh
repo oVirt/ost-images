@@ -44,9 +44,7 @@ elif [ $DISTRO = "node" ]; then
 fi
 
 # validate OpenSCAP profile parameter
-# TODO we cannot use the profile on RHVH until we make changes to RHVH
-#if [ $DISTRO = "rhel8" -o $DISTRO = "rhvh" ]; then
-if [ $DISTRO = "rhel8" ]; then
+if [ $DISTRO = "rhel8" -o $DISTRO = "rhvh" ]; then
     echo "With OpenSCAP profile: ${OPENSCAP_PROFILE:-none}"
 else
     echo "Distro doesn't work with OpenSCAP profiles properly, ignoring"
