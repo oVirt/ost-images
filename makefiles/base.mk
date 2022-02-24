@@ -9,13 +9,13 @@
 %_id_rsa.pub:
 	cp id_rsa.pub $@
 
-%.ks: %.ks.in %_id_rsa.pub
+%.ks: configs/$(DISTRO)/%.ks.in %_id_rsa.pub
 	sed \
 		-e "s|%REPO_ROOT%|$(REPO_ROOT)|" \
 		-e "s|%SSH_PUB_KEY%|${shell cat $*_id_rsa.pub}|" \
 		-e "s|%OPENSCAP_PROFILE%|${OPENSCAP_PROFILE}|" \
 		-e "s|%OPENSCAP_PROFILE_SNIPPET%|$(OPENSCAP_PROFILE_SNIPPET)|" \
-		$*.ks.in > $@
+		configs/$(DISTRO)/$*.ks.in > $@
 
 %-base.qcow2: CONSOLE_LOG=$*-base-console.log
 
