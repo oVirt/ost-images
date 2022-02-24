@@ -6,6 +6,8 @@ else
     rpm2cpio /run/install/repo/Packages/redhat-virtualization-host-image-update*|cpio -ivd
     squashfs=$(find|grep squashfs|grep -v meta)
     ln -s $squashfs /tmp/squashfs
+    mkdir -p /var/tmpcontent
+    mount --bind /var/tmpcontent /var/tmp
 fi
 %end
 
