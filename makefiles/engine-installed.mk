@@ -1,5 +1,5 @@
-%-provision-engine.sh:
-	$(PROVISION_SUBST_CMD) $(PROVISION_ENGINE_SCRIPT) > $@
+%-provision-engine.sh: configs/$(DISTRO)/%-provision-engine.sh.in
+	$(PROVISION_SUBST_CMD) configs/$(DISTRO)/$*-provision-engine.sh.in > $@
 
 cirros.img:
 	curl -L -o cirros.img $(CIRROS_URL)

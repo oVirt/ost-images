@@ -1,5 +1,5 @@
-%-provision-host.sh:
-	$(PROVISION_SUBST_CMD) $(PROVISION_HOST_SCRIPT) > $@
+%-provision-host.sh: configs/$(DISTRO)/%-provision-host.sh.in
+	$(PROVISION_SUBST_CMD) configs/$(DISTRO)/$*-provision-host.sh.in > $@
 
 %-host-installed.qcow2: %-base.qcow2 %-provision-host.sh
 	qemu-img create -f qcow2 -F qcow2 -b $*-base.qcow2 $@.tmp
