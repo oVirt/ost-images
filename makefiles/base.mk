@@ -19,7 +19,7 @@
 
 %-base.qcow2: CONSOLE_LOG=$*-base-console.log
 
-%-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks
+%-base.qcow2: $(if $(_USING_ISO), %.iso) %.ks provision-base.sh
 	qemu-img create -f qcow2 $@.tmp $(DISK_SIZE)
 #	Qemu runs with lowered privileges so if the build
 #	is done by root, the image is created with 664
