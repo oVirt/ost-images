@@ -2,6 +2,7 @@ include makefiles/constants.mk
 include makefiles/vars.mk
 include makefiles/pkglist.mk
 
+include makefiles/cirros.mk
 include makefiles/base.mk
 include makefiles/engine-installed.mk
 include makefiles/host-installed.mk
@@ -65,6 +66,7 @@ dist_image_SCRIPTS = \
 	$(NULL)
 
 CLEANFILES = \
+	cirros.img \
 	*-console.log \
 	*-pkglist*.txt \
 	*.ks \

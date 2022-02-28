@@ -1,10 +1,6 @@
 %-provision-engine.sh: configs/$(DISTRO)/%-provision-engine.sh.in
 	$(PROVISION_SUBST_CMD) configs/$(DISTRO)/$*-provision-engine.sh.in > $@
 
-cirros.img:
-	curl -L -o cirros.img $(CIRROS_URL)
-	qemu-img check -f qcow2 cirros.img
-
 %-engine-installed.qcow2: %-base.qcow2 %-provision-engine.sh cirros.img
 	qemu-img create -f qcow2 -F qcow2 -b $*-base.qcow2 $@.tmp
 #	See the remark above about chmod.
