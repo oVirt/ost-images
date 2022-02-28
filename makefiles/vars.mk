@@ -34,13 +34,6 @@ BUILD_ENGINE_INSTALLED := yes
 BUILD_HOST_INSTALLED := yes
 BUILD_HE_INSTALLED := yes
 
-# These variables point to scripts that provision "engine-installed"
-# and "host-installed" layers. Can be overriden by running with i.e. 'make PROVISION_HOST_SCRIPT=...'
-PROVISION_BASE_SCRIPT := provision-base.sh
-PROVISION_ENGINE_SCRIPT := $(DISTRO)-provision-engine.sh.in
-PROVISION_HOST_SCRIPT := $(DISTRO)-provision-host.sh.in
-PROVISION_HE_SCRIPT := $(DISTRO)-provision-he.sh.in
-
 # This resolves to either smth like 'el8.iso' for ISOs or url for repository urls
 _LOCATION := $(if $(_USING_ISO),$(DISTRO).iso,$(INSTALL_URL))
 

@@ -1,5 +1,5 @@
-%-provision-he.sh:
-	$(PROVISION_SUBST_CMD) $(PROVISION_HE_SCRIPT) > $@
+%-provision-he.sh: configs/$(DISTRO)/%-provision-he.sh.in
+	$(PROVISION_SUBST_CMD) configs/$(DISTRO)/$*-provision-he.sh.in > $@
 
 %-he-installed.qcow2: %-host-installed.qcow2 %-provision-he.sh cirros.img
 	qemu-img create -f qcow2 -F qcow2 -b $*-host-installed.qcow2 $@.tmp
