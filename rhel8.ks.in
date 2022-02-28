@@ -73,12 +73,6 @@ sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;' /etc/ssh/
 # Allow root login, needed by OST and host deploy
 sed -i 's/^PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-# fapolicyd
-# FIXME Temporary workaround until engine issues are resolved, one of:
-# 1) https://gerrit.ovirt.org/c/ovirt-engine/+/117373
-# 2) https://bugzilla.redhat.com/1902272
-systemctl disable fapolicyd
-
 # history
 echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 
