@@ -78,6 +78,9 @@ echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 # write down which OpenSCAP profile is set
 echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
 
+# FIXME: COPR uses SHA-1 when signing packages (https://pagure.io/copr/copr/issue/2106)
+update-crypto-policies --set LEGACY
+
 # clean repo metadata for url-based builds
 dnf clean all
 
