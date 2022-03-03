@@ -16,9 +16,6 @@ if [ -s /root/ost_images_openscap_profile ]; then
     # Ignored oscap rules for automatic testing
     ignored_oscap_rules=()
 
-    # Should be resolved by RHV eventually BZ#2021802
-    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_service_fapolicyd_enabled)
-
     # OST has single DNS server
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_network_configure_name_resolution)
     # OST storage (/exports/nfs)
