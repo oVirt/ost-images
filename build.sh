@@ -19,11 +19,11 @@ echo "with appliance: ${BUILD_HE_INSTALLED:=1}"
 echo "with node image url: ${NODE_URL_BASE:=https://resources.ovirt.org/repos/ovirt/github-ci/ovirt-node-ng-image/}"
 
 # cache CentOS images
-declare -A INSTALL_URL
-INSTALL_URL[el8]="CentOS.iso"
-INSTALL_URL[el8stream]="CentOS-Stream.iso"
-INSTALL_URL[el9stream]="CentOS-Stream-9.iso"
-IMAGE=${INSTALL_URL[$DISTRO]}
+declare -A ISO_URL
+ISO_URL[el8]="CentOS.iso"
+ISO_URL[el8stream]="CentOS-Stream.iso"
+ISO_URL[el9stream]="CentOS-Stream-9.iso"
+IMAGE=${ISO_URL[$DISTRO]}
 if [[ -n "${CENTOS_CACHE_URL}" && -n "$IMAGE" ]]; then
     echo "cache $IMAGE"
     curl $([[ -f $IMAGE ]] && echo "-z $IMAGE") --fail --limit-rate 100M -O ${CENTOS_CACHE_URL}/$IMAGE || { echo Download of $IMAGE failed; rm -f $IMAGE; exit 1; }
