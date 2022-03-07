@@ -16,5 +16,4 @@ jobs:
     uses: oVirt/ovirt-system-tests/.github/workflows/ost.yaml@master
     with:
       pr_url: ${{ github.event.issue.pull_request.url }}
-      suite: basic-suite-master
-      distro: rhel8
+      comment: "/ost basic-suite-master rhel8"
