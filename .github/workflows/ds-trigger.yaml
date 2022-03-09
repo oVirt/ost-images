@@ -8,7 +8,7 @@ jobs:
   trigger-ost:
     if: |
       github.event.issue.pull_request &&
-      startsWith(github.event.comment.body, '/ost') &&
+      github.event.comment.body == '/ost' &&
       (
         github.event.comment.author_association == 'MEMBER' ||
         github.event.comment.author_association == 'COLLABORATOR'
@@ -16,4 +16,4 @@ jobs:
     uses: oVirt/ovirt-system-tests/.github/workflows/ost.yaml@master
     with:
       pr_url: ${{ github.event.issue.pull_request.url }}
-      comment: "/ost basic-suite-master rhel8"
+      comment: " basic-suite-master rhel8"
