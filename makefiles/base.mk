@@ -55,6 +55,7 @@
 	virt-customize \
 		-a $@.tmp \
 		--run provision-base.sh \
+		$(if $(EXTRA_BASE_PROVISION_SCRIPT),--run $(EXTRA_BASE_PROVISION_SCRIPT),) \
 		--run-command "rpm -qa | sort > $(_PKGLIST_PATH)/$(@:.qcow2=-pkglist.txt)" \
 		--run-command "setfiles -F -m -v $(SE_CONTEXT) $(PARTITIONS)" \
 		--selinux-relabel
