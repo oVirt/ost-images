@@ -24,3 +24,11 @@ dnf -y --nogpgcheck install \
 # named openshift-install that prints an error and exits.
 
 dnf -y --nogpgcheck install https://templates.ovirt.org/yum/tr-ocp-installer-0.1.0-0.0.master.el8.x86_64.rpm
+
+# The following is needed in order to create an initial package
+# go-ovirt-client-tests. This is a dummy package that will have
+# a real go-ovirt-client-tests-exe bin just after upgrade.
+# In its initial form the package contains a shell script
+# named go-ovirt-client-tests-exe that prints an error and exits.
+
+dnf -y --nogpgcheck install https://templates.ovirt.org/yum/go-ovirt-client-tests-0.1.0-0.0.master.el8.x86_64.rpm
