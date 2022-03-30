@@ -6,7 +6,7 @@ rpm --import https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-mast
 dnf --repofrompath=ovirt-master-snapshot,https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/ \
     install -y dnf-utils ovirt-release-master
 
-dnf module enable -y javapackages-tools pki-deps postgresql:12
+dnf module enable -y javapackages-tools pki-deps postgresql:12 mod_auth_openidc:2.3
 dnf -y install \
     otopi-debug-plugins \
     ovirt-engine \
