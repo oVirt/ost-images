@@ -40,6 +40,10 @@ if [ -s /root/ost_images_openscap_profile ]; then
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sssd_enable_certmap)
     # Chronyd server directive needs to be configured manually
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_chronyd_server_directive)
+    # Set the Boot Loader Admin Username to a Non-Default Value (not applicable for HE)
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_grub2_admin_username)
+    # Set Boot Loader Password in grub2 (not applicable for HE)
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_grub2_password)
 
     # Based on https://github.com/ComplianceAsCode/content/blob/master/tests/ds_unselect_rules.sh
     DS=ssg-rhel8-ds.xml
