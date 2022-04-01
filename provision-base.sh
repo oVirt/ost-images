@@ -8,6 +8,29 @@ ipv6.dhcp-duid=ll
 ipv6.dhcp-iaid=mac
 EOF
 
+# Create connection files for interfaces
+# All connections will have never-default=True except eth0
+for i in {0..5}; do
+  iface="eth$i"
+  cat << EOF > /etc/NetworkManager/system-connections/$iface
+[connection]
+id=$iface
+uuid=$(uuid)
+type=ethernet
+autoconnect=true
+interface-name=$iface
+
+[ipv6]
+method=auto
+never-default=$([ $i -gt 0 ] && echo "true" || echo "false")
+
+[ipv4]
+method=auto
+never-default=$([ $i -gt 0 ] && echo "true" || echo "false")
+EOF
+  chmod 600 /etc/NetworkManager/system-connections/$iface
+done
+
 # Cache security profile and adjust it for OST
 if [ -s /root/ost_images_openscap_profile ]; then
     # Download RHEL8 oscap XML needed by offline runs
