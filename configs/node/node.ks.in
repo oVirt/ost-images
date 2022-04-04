@@ -63,6 +63,9 @@ fi
 # write down which OpenSCAP profile is set
 nsenter --root=/tmp/rw_layer sh -c 'echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile'
 
+# no need for nodectl on every login, slows down ansible too much
+nsenter --root=/tmp/rw_layer sh -c 'rm -f /etc/profile.d/nodectl-motd.sh /etc/profile.d/nodectl-run-banner.sh'
+
 nsenter --root=/tmp/rw_layer sed -i /^cachedir/d /etc/dnf/dnf.conf
 umount /tmp/rw_layer/dnftmp
 rmdir /tmp/rw_layer/dnftmp
