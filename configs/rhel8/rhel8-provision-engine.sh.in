@@ -4,7 +4,7 @@ pushd /etc/yum.repos.d
 curl --fail -O %RHEL8_BUILD%/api/rhel_86_engine_x86.repo
 curl --fail -O %RHEL8_BUILD%/api/rhv_45_engine.repo
 curl --fail -O %RHEL8_BUILD%/api/rhv_nightly.repo
-echo -e "[bob]\nname=bob\ngpgcheck=0\nenabled=1\nbaseurl=%RHEL8_BUILD%/el8" > bob.repo
+echo -e "[bob]\nname=bob\ngpgcheck=0\nenabled=1\nmodule_hotfixes=1\nbaseurl=%RHEL8_BUILD%/el8" > bob.repo
 dnf module enable -y postgresql:12 pki-deps
 popd
 
