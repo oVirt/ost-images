@@ -16,11 +16,13 @@ jobs:
     steps:
       - name: Pull latest selenium images
         run: podman pull docker.io/selenium/${{ matrix.image }}:latest
+      - name: Tag the image
+        run: podman tag docker.io/selenium/${{ matrix.image }}:latest ovirt/${{ matrix.image }}:latest
       - name: Push to Quay.io
         id: push-to-quay
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: docker.io/selenium/${{ matrix.image }}
+          image: ovirt/${{ matrix.image }}
           tags: latest
           registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ secrets.QUAY_USERNAME  }}
