@@ -1,9 +1,9 @@
 #!/bin/bash -xe
 
-CHROME_CONTAINER_IMAGE='quay.io/ovirt/node-chrome-debug:4.0.0'
-FIREFOX_CONTAINER_IMAGE='quay.io/ovirt/node-firefox-debug:4.0.0'
-HUB_CONTAINER_IMAGE='quay.io/ovirt/hub:4.0.0'
-FFMPEG_CONTAINER_IMAGE='quay.io/ovirt/video:ffmpeg-4.3.1-20211025'
+CHROME_CONTAINER_IMAGE='quay.io/ovirt/node-chrome-debug:latest'
+FIREFOX_CONTAINER_IMAGE='quay.io/ovirt/node-firefox-debug:latest'
+HUB_CONTAINER_IMAGE='quay.io/ovirt/hub:latest'
+FFMPEG_CONTAINER_IMAGE='quay.io/ovirt/video:latest'
 
 IMAGES=( \
     ${CHROME_CONTAINER_IMAGE} \
