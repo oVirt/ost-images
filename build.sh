@@ -45,10 +45,7 @@ elif [ $DISTRO = "node" -o $DISTRO = "el9node" ]; then
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION} || exit 1
 fi
 
-# validate OpenSCAP profile parameter
-# TODO we cannot use the profile on RHVH until we make changes to RHVH
-#if [ $DISTRO = "rhel8" -o $DISTRO = "rhvh" ]; then
-if [ $DISTRO = "rhel8" ]; then
+if [ $DISTRO = "rhel8" ] || [ $DISTRO = "rhvh" -a "$OPENSCAP_PROFILE" = "xccdf_org.ssgproject.content_profile_pci-dss" ]; then
     echo "With OpenSCAP profile: ${OPENSCAP_PROFILE:-none}"
 else
     echo "Distro doesn't work with OpenSCAP profiles properly, ignoring"
