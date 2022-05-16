@@ -2,7 +2,7 @@
 
 CHROME_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-chrome:4.0.0'
 FIREFOX_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-firefox:4.0.0'
-FFMPEG_CONTAINER_IMAGE='quay.io/ovirt/video:latest'
+FFMPEG_CONTAINER_IMAGE='quay.io/ovirt/selenium-video:latest'
 
 IMAGES=( \
     ${CHROME_CONTAINER_IMAGE} \
@@ -11,20 +11,19 @@ IMAGES=( \
 )
 
 ARTIFACTS_PATH="/var/tmp/selenium"
-DOCKER_CONFIG_PATH="/etc/docker"
+
+dnf install -y podman
 
 # redirect container storage to /var/tmp/
-mkdir -p ${DOCKER_CONFIG_PATH}
-echo "{\"data-root\":\"/var/tmp/docker\"}" > "${DOCKER_CONFIG_PATH}/daemon.json"
+sed -i 's|/var/lib/containers/storage|/var/tmp/containers/storage|g' /etc/containers/storage.conf
 
-dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-dnf install -y docker-ce
-systemctl enable docker
+# relabel redirected storage
+semanage fcontext -a -e /var/lib/containers /var/tmp/containers
+restorecon -R -v /var/tmp/containers
 
-# TODO: figure out a way to pull images here if docker works for us
-#for image in ${IMAGES[@]}; do
-#    docker pull ${image}
-#done
+for image in ${IMAGES[@]}; do
+    podman pull ${image}
+done
 
 mkdir -p ${ARTIFACTS_PATH}
 chmod 777 ${ARTIFACTS_PATH}
