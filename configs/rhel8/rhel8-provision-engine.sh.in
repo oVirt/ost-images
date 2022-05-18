@@ -14,14 +14,3 @@ dnf -y --nogpgcheck --setopt=*.module_hotfixes=1 install \
     ovirt-engine-extension-aaa-ldap-setup \
     ovirt-log-collector \
     ovirt-imageio-client
-
-# The following is needed in order to create an initial package
-# tr-ocp-installer. This is a dummy package that will have 
-# the real openshift-install bin just after upgrade.
-# The openshift-install bin is built with the related patch in
-# terraform-provider-ovirt repo and its purpose is to check if changes
-# suggested by the patch are fully compatible with OCP.
-# In its initial form the package contains a shell script
-# named openshift-install that prints an error and exits.
-
-dnf -y --nogpgcheck install https://templates.ovirt.org/yum/tr-ocp-installer-0.1.0-0.0.master.el8.x86_64.rpm
