@@ -1,0 +1,76 @@
+%pre
+cd /tmp
+if [ -e "/run/install/repo/ovirt-node-ng-image.squashfs.img" ]; then
+    ln -s /run/install/repo/ovirt-node-ng-image.squashfs.img /tmp/squashfs
+else
+    rpm2cpio /run/install/repo/Packages/redhat-virtualization-host-image-update*|cpio -ivd
+    squashfs=$(find|grep squashfs|grep -v meta)
+    ln -s $squashfs /tmp/squashfs
+fi
+%end
+
+timezone --utc UTC
+lang en_US.UTF-8
+keyboard us
+selinux --enforcing
+network --bootproto=dhcp
+firstboot --reconfig
+sshkey --username=root "%SSH_PUB_KEY%"
+rootpw --plaintext 123456
+poweroff
+clearpart --all --initlabel --disklabel=gpt
+autopart --type=thinp
+bootloader --timeout=1 --append="crashkernel=auto consoleblank=0 net.ifnames=0 console=ttyS0,115200n8"
+
+liveimg --url=file:///tmp/squashfs
+
+%OPENSCAP_PROFILE_SNIPPET%
+
+%post --erroronfail
+exec > /dev/ttyS0 2>&1
+set -ex
+imgbase --debug layout --init  >> /var/log/imgbased.log 2>&1
+
+# We install NetworkManager-config-server by default with
+# vdsm which stops automatic DHCP assignments to interfaces.
+# We use that in OST deploy so let's just disable that
+# and let DHCP do its job
+mkdir /tmp/rw_layer
+layer=/dev/$(lvs -ofullname | grep -o "[^ ].*+1")
+mount -onouuid "$layer" /tmp/rw_layer
+nsenter --root=/tmp/rw_layer rm -f /usr/lib/NetworkManager/conf.d/00-server.conf
+
+# Install also the appliance, to save time during setup.
+# Mount also /var* so that we keep dnf db/logs.
+vg=$(vgs --noheadings -ovg_name | grep -o '[^ ]*')
+mount -onouuid "/dev/${vg}/var" /tmp/rw_layer/var
+mount -onouuid "/dev/${vg}/var_log" /tmp/rw_layer/var/log
+mount -onouuid "/dev/${vg}/var_log_audit" /tmp/rw_layer/var/log/audit
+
+# Use a tmpfs filesystem for dnf cache. /dev/shm is not mounted at that point.
+mkdir -p /tmp/rw_layer/dnftmp
+mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
+nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
+source /etc/os-release
+if [ "$ID" = "rhel" ]; then
+    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage
+else
+    # --repo is mainly an optimization, also helps preventing some build failures -
+    # if they are due to other repos being inaccessible.
+    nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=9 install -y ovirt-engine-appliance
+fi
+
+# write down which OpenSCAP profile is set
+nsenter --root=/tmp/rw_layer sh -c 'echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile'
+
+nsenter --root=/tmp/rw_layer sed -i /^cachedir/d /etc/dnf/dnf.conf
+umount /tmp/rw_layer/dnftmp
+rmdir /tmp/rw_layer/dnftmp
+
+umount /tmp/rw_layer/var/log/audit
+umount /tmp/rw_layer/var/log
+umount /tmp/rw_layer/var
+umount /tmp/rw_layer
+rmdir /tmp/rw_layer
+
+%end
