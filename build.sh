@@ -35,10 +35,11 @@ if [ $DISTRO = "rhvh" ]; then
     NODE_IMG=rhvh.iso
     LATEST=$(curl --fail ${NODE_URL_BASE} | grep 'dvd1.iso<' | sed -n 's;.*>\(.*\)<.*;\1;p')
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) "${NODE_URL_BASE}/${LATEST}" || exit 1
-elif [ $DISTRO = "node" ]; then
-    NODE_IMG=node.iso
+elif [ $DISTRO = "node" -o $DISTRO = "el9node" ]; then
+    NODE_IMG="${DISTRO}.iso"
     # Latest ovirt-node as built by https://github.com/oVirt/ovirt-node-ng-image/actions/workflows/build.yml
     NODE_URL_DIST=el8
+    [ $DISTRO = "el9node" ] && NODE_URL_DIST=el9
     NODE_URL_LATEST_VERSION=$(curl --fail "${NODE_URL_BASE}" | sed -n 's;.*a href="\(ovirt-node-ng-installer-[0-9.-]*.'$NODE_URL_DIST'.iso\)\".*;\1;p' | grep "\.${NODE_URL_DIST}\." | sort | tail -1)
     echo "latest node ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}"
     curl --fail -L -o $NODE_IMG $([[ -f $NODE_IMG ]] && echo -z $NODE_IMG) ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION} || exit 1
