@@ -49,6 +49,7 @@ lvm2
 targetcli
 nfs-utils
 rpcbind
+policycoreutils-python-utils
 # for aaa tests from 389-ds module
 # 389-ds-base
 # 389-ds-base-legacy-tools
