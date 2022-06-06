@@ -15,4 +15,4 @@ dnf -y install \
 rm "/usr/lib/NetworkManager/conf.d/00-server.conf"
 
 # TODO? FIPS is not set properly on el9 only
-[ "$(. /etc/os-release; echo ${VERSION_ID})" = "9" ] && update-crypto-policies --set FIPS
+[ "$(. /etc/os-release; echo ${VERSION_ID})" = "9" ] && update-crypto-policies --set FIPS || :
