@@ -53,13 +53,15 @@ mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
 nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
 source /etc/os-release
 if [ "$ID" = "rhel" ]; then
-    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage
-elif [ "$VERSION" = "9" ]; then
-    nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=9 install -y ovirt-engine-appliance https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL9Collection/centos-stream-9-x86_64/02351243-python-coverage/python3-coverage-5.5-1.el9.x86_64.rpm
+  nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage
 else
+  if [ "$VERSION" = "9" ]; then
     # --repo is mainly an optimization, also helps preventing some build failures -
     # if they are due to other repos being inaccessible.
+    nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=9 install -y ovirt-engine-appliance https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL9Collection/centos-stream-9-x86_64/02351243-python-coverage/python3-coverage-5.5-1.el9.x86_64.rpm
+  else
     nsenter --root=/tmp/rw_layer dnf --repo=ovirt-\* --releasever=8 install -y ovirt-engine-appliance https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/01044152-python-coverage/python3-coverage-4.5.4-3.el8.x86_64.rpm
+  fi
 fi
 
 # write down which OpenSCAP profile is set
