@@ -6,7 +6,7 @@ curl --fail -O %RHEL8_BUILD%/api/rhv_45_host.repo
 curl --fail -O %RHEL8_BUILD%/api/rhv_nightly.repo
 popd
 
-dnf -y --nogpgcheck install ovirt-host python3-coverage vdsm
+dnf -y --nogpgcheck install ovirt-host python3-coverage vdsm vdsm-hook-log-console
 
 rm -f /usr/lib/NetworkManager/conf.d/00-server.conf
 
