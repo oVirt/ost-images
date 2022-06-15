@@ -7,7 +7,8 @@ dnf install -y \
 
 dnf -y install \
     ovirt-host \
-    python3-coverage
+    python3-coverage \
+    vdsm-hook-log-console
 # We install NetworkManager-config-server by default with
 # vdsm which stops automatic DHCP assignments to interfaces.
 # We use that in OST deploy so let's just disable that

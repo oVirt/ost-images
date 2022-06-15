@@ -53,9 +53,9 @@ mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
 nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
 source /etc/os-release
 if [ "$ID" = "rhel" ]; then
-    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage
+    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage vdsm-hook-log-console
 else
-    nsenter --root=/tmp/rw_layer dnf --releasever=$VERSION --disableexcludes=all install -y ovirt-engine-appliance python3-coverage
+    nsenter --root=/tmp/rw_layer dnf --releasever=$VERSION --disableexcludes=all install -y ovirt-engine-appliance python3-coverage vdsm-hook-log-console
 fi
 
 # write down which OpenSCAP profile is set
