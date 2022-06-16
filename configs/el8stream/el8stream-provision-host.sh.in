@@ -7,9 +7,15 @@ dnf install -y \
 
 dnf -y install \
     ovirt-host \
+    vdsm-hook-log-console \
     python3-coverage
 # We install NetworkManager-config-server by default with
 # vdsm which stops automatic DHCP assignments to interfaces.
 # We use that in OST deploy so let's just disable that
 # and let DHCP do its job
 rm "/usr/lib/NetworkManager/conf.d/00-server.conf"
+
+# Configure vdsm-hook-log-console. Do this here, and not (only) in
+# provision-he, so that we get the logs also when the HE VM
+# is started on/migrated to host-1.
+echo 'log_console_vm_regexp=HostedEngine' > /etc/sysconfig/vdsm
