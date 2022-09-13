@@ -17,6 +17,7 @@
 echo Building distro ${DISTRO:=el8stream}
 echo "with appliance: ${BUILD_HE_INSTALLED:=1}"
 echo "with node image url: ${NODE_URL_BASE:=https://resources.ovirt.org/repos/ovirt/github-ci/ovirt-node-ng-image/}"
+echo "fips mode: ${USE_FIPS-yes}"
 
 # cache CentOS images
 declare -A ISO_URL
