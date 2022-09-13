@@ -4,7 +4,7 @@ keyboard us
 rootpw  --plaintext 123456
 sshkey --username=root "%SSH_PUB_KEY%"
 firewall --service=ssh
-authselect select minimal
+authselect select sssd with-smartcard
 selinux --enforcing
 timezone --utc UTC
 network --bootproto=dhcp
