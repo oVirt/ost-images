@@ -3,15 +3,12 @@
 dnf copr enable -y ovirt/ovirt-master-snapshot centos-stream-$(. /etc/os-release; echo ${VERSION_ID})
 dnf install -y dnf-utils ovirt-release-master
 
-#FIXME replace with correct rebuild
-dnf install -y https://kojipkgs.fedoraproject.org//packages/aopalliance/1.0/30.fc37/noarch/aopalliance-1.0-30.fc37.noarch.rpm
-
 dnf module enable -y javapackages-tools pki-deps postgresql:12 mod_auth_openidc:2.3
 
-#FIXME once all deps are el9 drop the el8javahack repo
-dnf -y --repofrompath el8javahack,https://buildlogs.centos.org/centos/8-stream/virt/x86_64/ovirt-45/ --setopt=el8javahack.gpgcheck=0 --setopt=el8javahack.sslverify=0 install \
+dnf -y install \
     otopi-debug-plugins \
     ovirt-engine \
     ovirt-engine-extension-aaa-ldap-setup \
     ovirt-log-collector \
     ovirt-imageio-client
+
