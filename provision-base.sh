@@ -61,6 +61,7 @@ if [ -s /root/ost_images_openscap_profile ]; then
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_accounts_authorized_local_users)
     # SSSD needs to be configured manually
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sssd_enable_certmap)
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_sssd_enable_smartcards)
     # Chronyd server directive needs to be configured manually
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_chronyd_server_directive)
     # Set the Boot Loader Admin Username to a Non-Default Value (not applicable for HE)
