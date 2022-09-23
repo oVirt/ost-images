@@ -42,6 +42,7 @@ tcpdump
 vim
 wget
 yum-utils
+uuid
 # for storage setup
 iscsi-initiator-utils
 lvm2
