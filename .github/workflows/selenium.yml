@@ -1,10 +1,13 @@
-name: Push latest Selenium images to quay
+name: Push Selenium images to quay
 
 on:
   workflow_dispatch:
-  # Build every first day of the month at 00:00
-  schedule:
-    - cron:  '0 0 1 * *'
+    inputs:
+      selenium_version:
+        required: true
+        type: string
+        default: "4.5.0"
+
 env:
   IMAGE_REGISTRY: quay.io
 jobs:
@@ -12,17 +15,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: [ node-chrome-debug, node-firefox-debug, hub, video ]
+        image: [ standalone-chrome, standalone-firefox ]
+        tag: [ '${{ inputs.selenium_version }}' ]
+        include:
+          - image: video
+            tag: latest
     steps:
-      - name: Pull latest selenium images
-        run: podman pull docker.io/selenium/${{ matrix.image }}:latest
+      - name: Pull selenium images
+        run: podman pull docker.io/selenium/${{ matrix.image }}:${{ matrix.tag }}
       - name: Tag the image
-        run: podman tag docker.io/selenium/${{ matrix.image }}:latest ovirt/${{ matrix.image }}:latest
+        run: podman tag docker.io/selenium/${{ matrix.image }}:${{ matrix.tag }} ovirt/selenium-${{ matrix.image }}:latest
       - name: Push to Quay.io
         id: push-to-quay
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ovirt/${{ matrix.image }}
+          image: ovirt/selenium-${{ matrix.image }}
           tags: latest
           registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ secrets.QUAY_USERNAME  }}
