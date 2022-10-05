@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
-CHROME_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-chrome:4.0.0'
-FIREFOX_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-firefox:4.0.0'
+CHROME_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-chrome:latest'
+FIREFOX_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-firefox:latest'
 FFMPEG_CONTAINER_IMAGE='quay.io/ovirt/selenium-video:latest'
 
 IMAGES=( \
