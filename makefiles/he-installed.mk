@@ -10,7 +10,7 @@
 		--memsize $(_MEMSIZE) \
 		$(_CHANGE_DNF_CACHE_TO_DEV_SHM) \
 		--run "$*-provision-he.sh" \
-		--run-command "dnf download --downloaddir /var/tmp sysstat lm_sensors-libs.x86_64" \
+		--run-command "dnf download --downloaddir /var/tmp sysstat lm_sensors-libs.x86_64 pcp-conf pcp-libs.x86_64" \
 		$(_RESTORE_REGULAR_DNF_CACHE) \
 		--upload cirros.img:/var/tmp \
 		--run-command "chown root:root /var/tmp/cirros.img" \
