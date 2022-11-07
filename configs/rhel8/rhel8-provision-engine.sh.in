@@ -8,7 +8,7 @@ echo -e "[bob]\nname=bob\ngpgcheck=0\nenabled=1\nbaseurl=%RHEL8_BUILD%/el8" > bo
 dnf module enable -y postgresql:12 pki-deps
 popd
 
-dnf -y --nogpgcheck --setopt=*.module_hotfixes=1 install \
+dnf -y --nogpgcheck --setopt=*.module_hotfixes=1 --setopt=sslverify=0 install \
     otopi-debug-plugins \
     ovirt-engine \
     ovirt-engine-extension-aaa-ldap-setup \

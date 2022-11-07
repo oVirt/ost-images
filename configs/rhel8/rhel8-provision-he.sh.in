@@ -1,2 +1,2 @@
 #!/bin/bash -xe
-dnf -y --nogpgcheck install ovirt-engine-appliance ovirt-imageio-client
+dnf -y --nogpgcheck --setopt=sslverify=0 install ovirt-engine-appliance ovirt-imageio-client
