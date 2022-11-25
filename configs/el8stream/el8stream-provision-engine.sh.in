@@ -13,3 +13,7 @@ dnf -y install \
     ovirt-engine-extension-aaa-ldap-setup \
     ovirt-log-collector \
     ovirt-imageio-client
+
+# Downgrade java-11-openjdk-headless to workaround following issue during keycloak setup
+# 'Failed to load truststore: /etc/pki/ovirt-engine/.truststore'
+dnf -y java-11-openjdk-headless-11.0.15.0.10-3.el8
