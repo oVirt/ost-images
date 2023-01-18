@@ -17,7 +17,7 @@ DISK_SIZE := 22G
 # but requires the same amount of free space available as defined by 'DISK_SIZE' variable.
 SPARSIFY_BASE := yes
 # CirrOS to be included in engine images for later image upload and use as a base for guest VMs
-CIRROS_URL := https://templates.ovirt.org/yum/cirros.img
+CIRROS_URL := https://resources.ovirt.org/repos/ovirt/github-ci/centos/cirros.img
 
 # Whether to use FIPS or not. To disable FIPS set this to an empty string
 USE_FIPS := yes
