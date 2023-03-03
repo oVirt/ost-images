@@ -68,6 +68,8 @@ if [ -s /root/ost_images_openscap_profile ]; then
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_grub2_admin_username)
     # Set Boot Loader Password in grub2 (not applicable for HE)
     ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_grub2_password)
+    # Configure Fapolicy Module to Employ a Deny-all, Permit-by-exception Policy to Allow the Execution of Authorized Software Programs.
+    ignored_oscap_rules+=(xccdf_org.ssgproject.content_rule_fapolicy_default_deny)
 
     # Based on https://github.com/ComplianceAsCode/content/blob/master/tests/ds_unselect_rules.sh
     DS=ssg-rhel8-ds.xml
