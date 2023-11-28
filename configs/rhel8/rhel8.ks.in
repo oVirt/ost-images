@@ -19,7 +19,7 @@ part / --grow --size=6120 --fsoptions="noatime"
 part swap --size 4096
 part /home --size=128
 part /tmp --size=128
-part /var --size=1024
+part /var --size=2048
 part /var/log --size=512
 part /var/log/audit --size=256
 part /var/tmp --size=9220
