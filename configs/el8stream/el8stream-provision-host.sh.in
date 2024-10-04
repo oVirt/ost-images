@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-dnf copr enable -y ovirt/ovirt-master-snapshot centos-stream-$(. /etc/os-release; echo ${VERSION_ID})
+dnf copr enable -y ovirt/ovirt-master-snapshot centos-stream-$(. /etc/os-release; echo ${VERSION_ID} | grep -o '^[0-9]')
 dnf install -y \
     dnf-utils \
     ovirt-release-master
