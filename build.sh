@@ -40,8 +40,7 @@ echo "Distro doesn't work with OpenSCAP profiles properly, ignoring"
 OPENSCAP_PROFILE=
 
 pushd ost-images
-# bleh, due to the way jenkins jobs are chained there's a timing issue with archiving the results, if we run a new build right after the previous one the artifacts may not have been copied just yet. It's idiotic, but let's just wait a little...2 minutes ought to be enough for anyone.
-sleep 120
+
 rm -rf rpmbuild/RPMS/*
 [ -d /var/tmp ] && export TMPDIR=/var/tmp #virt-sparsify
 
