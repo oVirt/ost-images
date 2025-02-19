@@ -30,7 +30,7 @@ Be sure to have at least 100Gb of free disk space, at least 16Gb of RAM and 4 co
    ```
 
    Relevant environment variable you can use to configure the build script are:
-   - `DISTRO` - which image to build. Defaults to el8stream.
+   - `DISTRO` - which image to build. Defaults to el9stream.
    - `BUILD_HE_INSTALLED` - build appliance image. set to `0` or `""` if you do not want it to be build. Not relevant for "node" distros. Defaults to `1`.
    - `NODE_URL_BASE` - URL for ovirt-node/rhvh images - defaults to ovirt-node repo
    - `CENTOS_CACHE_URL` - URL we download ISOs from. If not provided the iso files must exist locally.
