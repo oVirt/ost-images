@@ -11,6 +11,7 @@ jobs:
     - name: el9stream
       run: |
         curl --fail -L -o CentOS-9-Stream.iso https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-dvd1.iso
+        curl --fail -L -o Alma-9.iso https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9-latest-x86_64-dvd.iso
 
     - name: Upload isos to resources.ovirt.org
       uses: ovirt/ovirt-resources-upload-action@main
@@ -23,3 +24,12 @@ jobs:
         cleanup: yes
         # it should be always overwritten, but just in case...
         keep_files_count: 1
+
+    - name: Upload isos to resources.ovirt.org
+      uses: ovirt/ovirt-resources-upload-action@main
+      with:
+        username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
+        key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
+        source: Alma-9.iso
+        target: github-ci/centos
