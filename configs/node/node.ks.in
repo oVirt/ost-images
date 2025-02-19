@@ -52,12 +52,8 @@ mkdir -p /tmp/rw_layer/dnftmp
 mount -o size=4G -t tmpfs none /tmp/rw_layer/dnftmp
 nsenter --root=/tmp/rw_layer sed -i '$ a\cachedir=/dnftmp' /etc/dnf/dnf.conf
 source /etc/os-release
-if [ "$ID" = "rhel" ]; then
-    nsenter --root=/tmp/rw_layer dnf --repo=ostci --repofrompath ostci,%REPO_ROOT% --nogpgcheck install -y rhvm-appliance python3-coverage vdsm-hook-log-console vdsm-hook-log-firmware
-else
-    nsenter --root=/tmp/rw_layer dnf --releasever=$VERSION --repo appstream install -y uuid
-    nsenter --root=/tmp/rw_layer dnf --releasever=$VERSION --disableexcludes=all install -y ovirt-engine-appliance python3-coverage vdsm-hook-log-console vdsm-hook-log-firmware
-fi
+nsenter --root=/tmp/rw_layer dnf --releasever=$VERSION --repo appstream install -y uuid
+nsenter --root=/tmp/rw_layer dnf --releasever=$VERSION --disableexcludes=all install -y ovirt-engine-appliance python3-coverage vdsm-hook-log-console vdsm-hook-log-firmware
 
 # write down which OpenSCAP profile is set
 nsenter --root=/tmp/rw_layer sh -c 'echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile'
