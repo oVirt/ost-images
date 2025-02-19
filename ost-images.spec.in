@@ -1,4 +1,4 @@
-%{!?distro: %global distro el8}
+%{!?distro: %global distro el9stream}
 %{!?release: %global release @PACKAGE_RELEASE@}
 
 # RPM compression parameters

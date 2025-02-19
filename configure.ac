@@ -40,10 +40,10 @@ AC_ARG_WITH(
     [distro],
     [AS_HELP_STRING(
         [--with-distro=DISTRO],
-        [the distro that you want to build, @<:@default=el8stream@:>@]
+        [the distro that you want to build, @<:@default=el9stream@:>@]
     )],
     ,
-    [with_distro="el8stream"]
+    [with_distro="el9stream"]
 )
 AC_SUBST([DISTRO], ["${with_distro}"])
 
