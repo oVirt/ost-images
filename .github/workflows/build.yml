@@ -61,7 +61,7 @@ jobs:
         keep_files_count: 21
         
     - name: Upload console log to artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: console
         path: /home/build/ost-images/*.log
