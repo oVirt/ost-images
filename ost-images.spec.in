@@ -24,7 +24,7 @@ Prefix: %{_datarootdir}
 
 BuildRequires: autoconf
 BuildRequires: automake
-BuildRequires: libguestfs-tools-c
+BuildRequires: guestfs-tools
 BuildRequires: libvirt-client
 BuildRequires: libvirt-daemon-config-network
 BuildRequires: make

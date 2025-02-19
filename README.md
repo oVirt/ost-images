@@ -14,7 +14,7 @@ Be sure to have at least 100Gb of free disk space, at least 16Gb of RAM and 4 co
 
    ```console
    dnf install -y git
-   dnf install -y make autoconf automake rpm-build libguestfs-tools-c libvirt-client libvirt-daemon-config-network qemu-img virt-install
+   dnf install -y make autoconf automake rpm-build guestfs-tools libvirt-client libvirt-daemon-config-network qemu-img virt-install
    ```
 
 2. As a normal user, clone ost-image repository
