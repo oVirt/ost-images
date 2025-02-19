@@ -36,7 +36,7 @@
 		--vcpus 2 \
 		--disk path=$@.tmp \
 		--location=$(_LOCATION) \
-		--os-variant rhel8-unknown \
+		--osinfo centos-stream9 \
 		--hvm \
 		--graphics=vnc \
 		--initrd-inject=$*.ks \
