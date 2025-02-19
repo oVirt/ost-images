@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: el8stream
+    - name: el9stream
       run: |
-        curl --fail -L -o CentOS-Stream.iso http://isoredirect.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso
+        curl --fail -L -o CentOS-9-Stream.iso https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-dvd1.iso
 
     - name: Upload isos to resources.ovirt.org
       uses: ovirt/ovirt-resources-upload-action@main
@@ -18,7 +18,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
         key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
         known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
-        source: CentOS-Stream.iso
+        source: CentOS-9-Stream.iso
         target: github-ci/centos
         cleanup: yes
         # it should be always overwritten, but just in case...
