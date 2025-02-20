@@ -30,38 +30,28 @@ jobs:
             iso: AlmaLinux-9.iso
     container:
       image: quay.io/ovirt/buildcontainer:${{ matrix.os }}
-      options: --group-add qemu --user build --privileged
+      options: --privileged --init --cgroupns host
 
     steps:
 
     - name: Checkout
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        cd /home/build
-        gh repo clone oVirt/ost-images -- -n --depth 1
-        cd ost-images
-        git fetch --depth 1 origin $GITHUB_REF
-        git checkout FETCH_HEAD
+      uses: actions/checkout@v4
 
     - name: Build images
-      env:
-        LIBGUESTFS_BACKEND: direct
-        HOME: /home/build
       run: |
-        cd /home/build
+        libvirtd --daemon
+        virtlogd --daemon
+        cd ..
         curl --fail -O https://resources.ovirt.org/repos/ovirt/github-ci/centos/${{ matrix.iso }}
         DISTRO=${{ matrix.os }} ost-images/build.sh
 
     - name: Upload rpms to resources.ovirt.org
       uses: ovirt/ovirt-resources-upload-action@main
-      env:
-        HOME: /home/build
       with:
         username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
         key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
         known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
-        source: /home/build/ost-images/rpmbuild/RPMS/x86_64/*.rpm
+        source: rpmbuild/RPMS/x86_64/*.rpm
         target: github-ci/ost-images
         cleanup: yes
         createrepo: yes
@@ -71,14 +61,13 @@ jobs:
     - name: Upload console log to artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: console
-        path: /home/build/ost-images/*.log
+        name: console-${{ matrix.os }}
+        path: "*.log"
 
     - name: Report back results
       if: github.event.issue.pull_request
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        cd /home/build/ost-images
         MESSAGE="Built images:\\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo -n https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i)\\n; done)"
         curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d "{\"body\": \"${MESSAGE}\"}" ${{github.event.issue.url}}/comments
