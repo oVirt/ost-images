@@ -32,9 +32,9 @@
 #	Didn't check what the minimum is currently.
 	virt-install \
 		--name $(@:.qcow2=) \
-		--memory 6144 \
-		--vcpus 2 \
-		--cpu host-model \
+		--memory 8192 \
+		--vcpus 4 \
+		--cpu host-passthrough \
 		--disk path=$@.tmp \
 		--location=$(_LOCATION) \
 		--osinfo centos-stream9 \
@@ -46,7 +46,7 @@
 		--extra-args console=ttyS0,115200 \
 		--serial=pty,log.file=$(shell realpath ${CONSOLE_LOG}) \
 		--noautoconsole \
-		--wait 60 \
+		--wait 20 \
 		--noreboot || \
 			{ \
 				echo "ERROR: virt-install $(@:.qcow2=) failed:"; \
