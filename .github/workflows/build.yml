@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build-el9stream:
+  build:
     runs-on: [ self-hosted, image-builders ]
     if: |
       github.event_name == 'workflow_dispatch' ||
@@ -26,8 +26,8 @@ jobs:
         include:
           - os: el9stream
             iso: CentOS-Stream-9.iso
-          - os: alma9
-            iso: Alma-9.iso
+          - os: almalinux9
+            iso: AlmaLinux-9.iso
     container:
       image: quay.io/ovirt/buildcontainer:${{ matrix.os }}
       options: --group-add qemu --user build --privileged

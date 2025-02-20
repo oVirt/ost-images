@@ -17,7 +17,7 @@ echo "with node image url: ${NODE_URL_BASE:=https://resources.ovirt.org/repos/ov
 
 # cache CentOS images
 declare -A ISO_URL
-ISO_URL[alma9]="Alma-9.iso"
+ISO_URL[almalinux9]="AlmaLinux-9.iso"
 ISO_URL[el9stream]="CentOS-Stream-9.iso"
 ISO_URL[storage]="CentOS-Stream-9.iso"
 IMAGE=${ISO_URL[$DISTRO]}
