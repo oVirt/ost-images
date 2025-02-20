@@ -7,6 +7,7 @@ on:
     types: [created]
 
 jobs:
+
   build-el9stream:
     runs-on: [ self-hosted, image-builders ]
     if: |
@@ -20,8 +21,15 @@ jobs:
       )
     permissions:
       pull-requests: write
+    strategy:
+      matrix:
+        include:
+          - os: el9stream
+            iso: CentOS-Stream-9.iso
+          - os: alma9
+            iso: Alma-9.iso
     container:
-      image: quay.io/ovirt/buildcontainer:el9stream
+      image: quay.io/ovirt/buildcontainer:${{ matrix.os }}
       options: --group-add qemu --user build --privileged
 
     steps:
@@ -42,10 +50,8 @@ jobs:
         HOME: /home/build
       run: |
         cd /home/build
-        curl --fail -O https://resources.ovirt.org/repos/ovirt/github-ci/centos/CentOS-Stream-9.iso
-        DISTRO=el9stream ost-images/build.sh
-        curl --fail -O https://resources.ovirt.org/repos/ovirt/github-ci/centos/Alma-9.iso
-        DISTRO=alma9 ost-images/build.sh
+        curl --fail -O https://resources.ovirt.org/repos/ovirt/github-ci/centos/${{ matrix.iso }}
+        DISTRO=${{ matrix.os }} ost-images/build.sh
 
     - name: Upload rpms to resources.ovirt.org
       uses: ovirt/ovirt-resources-upload-action@main
