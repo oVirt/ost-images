@@ -30,7 +30,7 @@ jobs:
             iso: AlmaLinux-9.iso
     container:
       image: quay.io/ovirt/buildcontainer:${{ matrix.os }}
-      options: --group-add qemu --user build --privileged
+      options: --group-add qemu --user build --privileged --init
 
     steps:
 

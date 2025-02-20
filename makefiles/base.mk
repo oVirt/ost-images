@@ -38,6 +38,7 @@
 		--disk path=$@.tmp \
 		--location=$(_LOCATION) \
 		--osinfo centos-stream9 \
+		--events on_poweroff=destroy \
 		--hvm \
 		--graphics=vnc \
 		--initrd-inject=$*.ks \
