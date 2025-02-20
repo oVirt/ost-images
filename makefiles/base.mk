@@ -34,6 +34,7 @@
 		--name $(@:.qcow2=) \
 		--memory 6144 \
 		--vcpus 2 \
+		--cpu host-model \
 		--disk path=$@.tmp \
 		--location=$(_LOCATION) \
 		--osinfo centos-stream9 \
