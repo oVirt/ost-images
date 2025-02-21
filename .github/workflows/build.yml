@@ -24,12 +24,17 @@ jobs:
     strategy:
       matrix:
         include:
+          - os: storage
+            iso: CentOS-Stream-9.iso
+            buildcontainer: el9stream
           - os: el9stream
             iso: CentOS-Stream-9.iso
+            buildcontainer: el9stream
           - os: almalinux9
             iso: AlmaLinux-9.iso
+            buildcontainer: almalinux9
     container:
-      image: quay.io/ovirt/buildcontainer:${{ matrix.os }}
+      image: quay.io/ovirt/buildcontainer:${{ matrix.buildcontainer }}
       options: --privileged --init --cgroupns host
 
     steps:
