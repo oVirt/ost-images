@@ -20,6 +20,7 @@ declare -A ISO_URL
 ISO_URL[almalinux9]="AlmaLinux-9.iso"
 ISO_URL[el9stream]="CentOS-Stream-9.iso"
 ISO_URL[storage]="CentOS-Stream-9.iso"
+ISO_URL[el9node]="CentOS-Stream-9.iso"
 IMAGE=${ISO_URL[$DISTRO]}
 if [[ -n "${CENTOS_CACHE_URL}" && -n "$IMAGE" ]]; then
     echo "cache $IMAGE"
