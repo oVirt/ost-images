@@ -60,7 +60,7 @@ nsenter --root=/tmp/rw_layer sh -c 'echo -n "%OPENSCAP_PROFILE%" > /root/ost_ima
 
 #rerun fips setup in rw layer
 if [ "%USE_FIPS%" = "yes" ]; then
-    nsenter --root=/tmp/rw_layer fips-mode-setup --enable
+    nsenter --root=/tmp/rw_layer fips-mode-setup --enable --no-bootcfg
 fi
 
 nsenter --root=/tmp/rw_layer sed -i /^cachedir/d /etc/dnf/dnf.conf
