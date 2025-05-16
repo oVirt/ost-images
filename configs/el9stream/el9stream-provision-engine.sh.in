@@ -12,3 +12,5 @@ dnf -y install \
     ovirt-log-collector \
     ovirt-imageio-client
 
+mkdir /usr/share/ovirt-system-tests
+
