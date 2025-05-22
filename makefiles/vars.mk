@@ -20,7 +20,8 @@ SPARSIFY_BASE := yes
 CIRROS_URL := https://resources.ovirt.org/repos/ovirt/github-ci/centos/cirros.img
 
 # Whether to use FIPS or not. To disable FIPS set this to an empty string
-USE_FIPS := yes
+# disable fips for now as the current cryptography setup is broken for java 11
+USE_FIPS :=
 
 # On/off switches for building layers. These options should have
 # sensible defaults i.e. if you have 'ost-images-el8-base' package installed,
