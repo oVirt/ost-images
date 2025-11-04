@@ -64,7 +64,6 @@ jobs:
         source: rpmbuild/RPMS/x86_64/*.rpm
         target: github-ci/ost-images
         cleanup: yes
-        createrepo: yes
         # keep 20 last rpms (not necessarily complete set of images) + repodata
         keep_files_count: 21
         
@@ -81,3 +80,17 @@ jobs:
       run: |
         MESSAGE="Built images:\\n$(for i in rpmbuild/RPMS/x86_64/*.rpm; do echo -n https://resources.ovirt.org/repos/ovirt/github-ci/ost-images/$(basename $i)\\n; done)"
         curl -H "Authorization: Token ${GITHUB_TOKEN}" -X POST -d "{\"body\": \"${MESSAGE}\"}" ${{github.event.issue.url}}/comments
+
+  createrepo:
+    permissions: {}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create or update repository metadata
+      uses: ovirt/ovirt-resources-upload-action@main
+      with:
+        username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
+        key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
+        target: github-ci/ost-images
+        createrepo: yes
