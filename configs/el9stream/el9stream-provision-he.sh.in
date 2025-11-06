@@ -1,3 +1,5 @@
 #!/bin/bash -xe
 dnf -y --nogpgcheck install ovirt-imageio-client
 dnf -y --nogpgcheck install ovirt-engine-appliance
+
+mkdir /usr/share/ovirt-system-tests
