@@ -17,7 +17,9 @@ DISK_SIZE := 23G
 # but requires the same amount of free space available as defined by 'DISK_SIZE' variable.
 SPARSIFY_BASE := yes
 # CirrOS to be included in engine images for later image upload and use as a base for guest VMs
-CIRROS_URL := https://resources.ovirt.org/repos/ovirt/github-ci/centos/cirros.img
+#CIRROS_URL := https://resources.ovirt.org/repos/ovirt/github-ci/centos/cirros.img
+# Cirros was replaced by oVirt TinyCore
+CIRROS_URL := https://github.com/oVirt/ovirt-tinycore-linux/releases/download/v13.13/oVirtTinyCore64-13.12.qcow2
 
 # Whether to use FIPS or not. To disable FIPS set this to an empty string
 # disable fips for now as the current cryptography setup is broken for java 11
