@@ -20,7 +20,7 @@ declare -A ISO_URL
 ISO_URL[almalinux9]="AlmaLinux-9.iso"
 ISO_URL[el9stream]="CentOS-Stream-9.iso"
 ISO_URL[storage]="CentOS-Stream-9.iso"
-ISO_URL[el9node]="CentOS-Stream-9.iso"
+ISO_URL[el9snode]="CentOS-Stream-9.iso"
 IMAGE=${ISO_URL[$DISTRO]}
 if [[ -n "${CENTOS_CACHE_URL}" && -n "$IMAGE" ]]; then
     echo "cache $IMAGE"
@@ -28,10 +28,10 @@ if [[ -n "${CENTOS_CACHE_URL}" && -n "$IMAGE" ]]; then
 fi
 
 # cache ovirt-node image
-if [[ $DISTRO = "node" || $DISTRO = "el9node" ]]; then
+if [[ $DISTRO = "node" || $DISTRO = "el9snode" ]]; then
     NODE_IMG="${DISTRO}.iso"
     # Latest ovirt-node as built by https://github.com/oVirt/ovirt-node-ng-image/actions/workflows/build.yml
-    NODE_URL_DIST=el9
+    NODE_URL_DIST=c9s
     NODE_URL_LATEST_VERSION=$(curl --fail "${NODE_URL_BASE}" | sed -n 's;.*a href="\(ovirt-node-ng-installer-[0-9.-]*.'$NODE_URL_DIST'.iso\)\".*;\1;p' | grep "\.${NODE_URL_DIST}\." | sort | tail -1)
     echo "latest node ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION}"
     curl --fail -L -o "$NODE_IMG" $([[ -f "$NODE_IMG" ]] && echo -z "$NODE_IMG") ${NODE_URL_BASE}${NODE_URL_LATEST_VERSION} || exit 1
