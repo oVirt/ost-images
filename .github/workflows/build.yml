@@ -29,7 +29,7 @@ jobs:
           - os: storage
             iso: CentOS-Stream-9.iso
             buildcontainer: el9stream
-          - os: el9node
+          - os: el9snode
             iso: CentOS-Stream-9.iso
             buildcontainer: el9stream
           - os: el9stream
