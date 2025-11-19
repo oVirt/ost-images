@@ -1,5 +1,8 @@
 #!/bin/bash -xe
 dnf -y --nogpgcheck install ovirt-imageio-client
-dnf -y --nogpgcheck install ovirt-engine-appliance
+
+. /etc/os-release
+MAJOR_VERSION=$(echo ${VERSION_ID} | cut -d. -f1)
+dnf -y --nogpgcheck install ovirt-engine-appliance-${ID}${MAJOR_VERSION}
 
 mkdir /usr/share/ovirt-system-tests
