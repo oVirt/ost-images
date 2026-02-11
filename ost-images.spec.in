@@ -1,4 +1,5 @@
-%{!?distro: %global distro el9stream}
+%{!?distro: %global distro centos}
+%{!?distro_version: %global distro_version 9}
 %{!?release: %global release @PACKAGE_RELEASE@}
 
 # RPM compression parameters
@@ -7,6 +8,7 @@
 %global _binary_payload w9T%{xz_num_threads}.xzdio
 
 # Whether certain RPMs are built or not
+%{!?with_storage: %global with_storage 0}
 %{!?with_engine_installed: %global with_engine_installed 0}
 %{!?with_host_installed: %global with_host_installed 0}
 %{!?with_he_installed: %global with_he_installed 0}
@@ -24,12 +26,8 @@ Prefix: %{_datarootdir}
 
 BuildRequires: autoconf
 BuildRequires: automake
-BuildRequires: guestfs-tools
-BuildRequires: libvirt-client
-BuildRequires: libvirt-daemon-config-network
 BuildRequires: make
 BuildRequires: qemu-img
-BuildRequires: virt-install
 
 %global base_version %{version}-%{release}
 
@@ -40,71 +38,81 @@ VM images needed to run OST
 %setup
 
 %build
-%configure --with-distro=%{distro}
+%configure --with-distro=%{distro} --with-distro-version=%{distro_version}
 
 %install
 %make_install
 
-%package %{distro}-base
+%package %{distro}%{distro_version}-base
 Summary: Bare distro installation image with ssh key for root injected
-Obsoletes: %{name}-%{distro}-upgrade < %{base_version}
+Obsoletes: %{name}-%{distro}%{distro_version}-upgrade < %{base_version}
 
-%description %{distro}-base
+%description %{distro}%{distro_version}-base
 Bare distro installation image with ssh key for root injected
 
-%files %{distro}-base
-%{_datarootdir}/%{name}/*.ks
+%files %{distro}%{distro_version}-base
 %{_datarootdir}/%{name}/*_id_rsa*
 %attr(444, -, -) %{_datarootdir}/%{name}/*-base.qcow2
-%{_datarootdir}/%{name}/*-base-pkglist.txt
+%{_datarootdir}/%{name}/*-base.packages
+
+%if %{with_storage}
+
+%package %{distro}%{distro_version}-storage
+Summary: Distro with storage
+
+%description %{distro}%{distro_version}-storage
+Distro with storage
+
+%files %{distro}%{distro_version}-storage
+%attr(444, -, -) %{_datarootdir}/%{name}/*-storage.qcow2
+%{_datarootdir}/%{name}/*-storage.packages
+
+%endif
 
 
 %if %{with_engine_installed}
 
-%package %{distro}-engine-installed
+%package %{distro}%{distro_version}-engine-installed
 Summary: Distro with ovirt-engine installed
-Requires: %{name}-%{distro}-base = %{base_version}
-Obsoletes: %{name}-%{distro}-engine-deps-installed < %{base_version}
+Requires: %{name}-%{distro}%{distro_version}-base = %{base_version}
+Obsoletes: %{name}-%{distro}%{distro_version}-engine-deps-installed < %{base_version}
 
-%description %{distro}-engine-installed
+%description %{distro}%{distro_version}-engine-installed
 Distro with ovirt-engine installed
 
-%files %{distro}-engine-installed
+%files %{distro}%{distro_version}-engine-installed
 %attr(444, -, -) %{_datarootdir}/%{name}/*-engine-installed.qcow2
-%{_datarootdir}/%{name}/*-engine-installed-pkglist*.txt
-%{_datarootdir}/%{name}/*-provision-engine.sh
+%{_datarootdir}/%{name}/*-engine-installed.packages
 
 %endif
 
 %if %{with_host_installed}
 
-%package %{distro}-host-installed
+%package %{distro}%{distro_version}-host-installed
 Summary: Distro with ovirt-host installed
-Requires: %{name}-%{distro}-base = %{base_version}
-Obsoletes: %{name}-%{distro}-host-deps-installed < %{base_version}
+Requires: %{name}-%{distro}%{distro_version}-base = %{base_version}
+Obsoletes: %{name}-%{distro}%{distro_version}-host-deps-installed < %{base_version}
 
-%description %{distro}-host-installed
+%description %{distro}%{distro_version}-host-installed
 Distro with ovirt-host installed
 
-%files %{distro}-host-installed
+%files %{distro}%{distro_version}-host-installed
 %attr(444, -, -) %{_datarootdir}/%{name}/*-host-installed.qcow2
-%{_datarootdir}/%{name}/*-host-installed-pkglist*.txt
-%{_datarootdir}/%{name}/*-provision-host.sh
+%{_datarootdir}/%{name}/*-host-installed.packages
 
 %endif
 
 %if %{with_he_installed}
 
-%package %{distro}-he-installed
+%package %{distro}%{distro_version}-he-installed
 Summary: Distro with ovirt-engine-appliance installed
-Requires: %{name}-%{distro}-host-installed = %{version}-%{release}
+Requires: %{name}-%{distro}%{distro_version}-host-installed = %{version}-%{release}
 
-%description %{distro}-he-installed
+%description %{distro}%{distro_version}-he-installed
 Distro with ovirt-engine-appliance installed
 
-%files %{distro}-he-installed
+%files %{distro}%{distro_version}-he-installed
 %attr(444, -, -) %{_datarootdir}/%{name}/*-he-installed.qcow2
-%{_datarootdir}/%{name}/*-he-installed-pkglist*.txt
-%{_datarootdir}/%{name}/*-provision-he.sh
+%{_datarootdir}/%{name}/*-he-installed.packages
 
 %endif

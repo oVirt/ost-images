@@ -1,0 +1,142 @@
+if [[ $(rpm --eval '%{centos_ver}') == '9' ]]; then
+    authselect select minimal
+else
+    authselect select local
+fi
+
+firewall-offline-cmd --add-service=cockpit
+systemctl enable firewalld
+systemctl enable sshd
+systemctl enable fstrim.timer
+systemctl enable cockpit.socket
+systemctl enable qemu-guest-agent
+
+# OpenSSH Config
+sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;s/^#PermitRootLogin.*/PermitRootLogin yes/g;' /etc/ssh/sshd_config
+
+# SSH Key
+echo -n "%SSH_PUB_KEY%" >> /root/.ssh/authorized_keys
+
+# History
+echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
+
+# Write down which OpenSCAP profile is set
+echo -n "%OPENSCAP_PROFILE%" > /root/ost_images_openscap_profile
+
+# NetworkManager drop-in config for stable ipv6 addresses
+cat << EOF > /etc/NetworkManager/conf.d/10-stable-ipv6-addr.conf
+[connection]
+ipv6.addr-gen-mode=0
+ipv6.dhcp-duid=ll
+ipv6.dhcp-iaid=mac
+EOF
+
+# Create connection files for interfaces
+# All connections will have never-default=True except enp1s0
+for i in {1..6}; do
+  iface="enp${i}s0"
+  cat << EOF > /etc/NetworkManager/system-connections/$iface
+[connection]
+id=$iface
+uuid=$(uuid)
+type=ethernet
+autoconnect=true
+interface-name=$iface
+
+[ipv6]
+method=auto
+never-default=$([ $i -gt 1 ] && echo "true" || echo "false")
+
+[ipv4]
+method=auto
+never-default=$([ $i -gt 1 ] && echo "true" || echo "false")
+EOF
+  chmod 600 /etc/NetworkManager/system-connections/$iface
+done
+
+# create a dummy repo - dnf is grumpy when it has no repos to work with
+mkdir -p /etc/yum.repos.d/ost-dummy-repo/repodata
+echo '<metadata packages="0"/>' > /etc/yum.repos.d/ost-dummy-repo/repodata/primary.xml
+cat << EOF > /etc/yum.repos.d/ost-dummy-repo/repodata/repomd.xml
+<repomd>
+    <data type="primary">
+        <location href="repodata/primary.xml"/>
+    </data>
+</repomd>
+EOF
+cat << EOF > /etc/yum.repos.d/dummy.repo
+[dummy]
+name=dummy
+gpgcheck=0
+baseurl=/etc/yum.repos.d/ost-dummy-repo
+EOF
+
+# Cause journal logs to persist after reboot.
+mkdir -p /var/log/journal
+
+# Install packages depending on the profile
+if [[ "$kiwi_profiles" == *"storage"* ]]; then
+    CHROME_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-chrome:latest'
+    FIREFOX_CONTAINER_IMAGE='quay.io/ovirt/selenium-standalone-firefox:latest'
+    FFMPEG_CONTAINER_IMAGE='quay.io/ovirt/selenium-video:latest'
+
+    IMAGES=( \
+        ${CHROME_CONTAINER_IMAGE} \
+        ${FIREFOX_CONTAINER_IMAGE} \
+        ${FFMPEG_CONTAINER_IMAGE} \
+    )
+
+    ARTIFACTS_PATH="/var/tmp/selenium"
+
+    dnf install -y podman
+
+    # redirect container storage to /var/tmp/
+    sed -i 's|/var/lib/containers/storage|/var/tmp/containers/storage|g' /etc/containers/storage.conf
+
+    # relabel redirected storage
+    semanage fcontext -a -e /var/lib/containers /var/tmp/containers
+    restorecon -R -v /var/tmp/containers
+
+    for image in ${IMAGES[@]}; do
+        podman pull ${image}
+    done
+
+    mkdir -p ${ARTIFACTS_PATH}
+    chmod 777 ${ARTIFACTS_PATH}
+
+    firewall-offline-cmd --add-port=4444/tcp
+    firewall-offline-cmd --add-port=4444/udp
+fi
+
+if [[ "$kiwi_profiles" == *"provision-he"* ]]; then
+    dnf -y install ovirt-imageio-client
+
+    if [[ "$kiwi_profiles" == *"almalinux"* ]]; then
+        dnf -y --nogpgcheck install ovirt-engine-appliance-almalinux$(rpm --eval '%{centos_ver}')
+    else
+        dnf -y --nogpgcheck install ovirt-engine-appliance-centos$(rpm --eval '%{centos_ver}')
+    fi
+
+    mkdir /usr/share/ovirt-system-tests
+    wget -O /usr/share/ovirt-system-tests/cirros.img https://github.com/oVirt/ovirt-tinycore-linux/releases/download/v13.13/oVirtTinyCore64-13.12.qcow2
+fi
+
+if [[ "$kiwi_profiles" == *"provision-engine"* ]]; then
+    dnf -y install \
+        otopi-debug-plugins \
+        ovirt-engine \
+        ovirt-engine-extension-aaa-ldap-setup \
+        ovirt-log-collector \
+        ovirt-imageio-client
+
+    mkdir /usr/share/ovirt-system-tests
+    wget -O /usr/share/ovirt-system-tests/cirros.img https://github.com/oVirt/ovirt-tinycore-linux/releases/download/v13.13/oVirtTinyCore64-13.12.qcow2
+fi
+
+if [[ "$kiwi_profiles" == *"provision-host"* || "$kiwi_profiles" == *"provision-he"* ]]; then
+    dnf -y install \
+        ovirt-host \
+        python3-coverage \
+        vdsm-hook-log-console \
+        vdsm-hook-log-firmware
+fi

@@ -25,35 +25,35 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        include:
-          - os: storage
-            iso: CentOS-Stream-9.iso
-            buildcontainer: el9stream
-          - os: el9snode
-            iso: CentOS-Stream-9.iso
-            buildcontainer: el9stream
-          - os: el9stream
-            iso: CentOS-Stream-9.iso
-            buildcontainer: el9stream
-          - os: almalinux9
-            iso: AlmaLinux-9.iso
-            buildcontainer: almalinux9
+        os: [ 'centos', 'almalinux' ]
+        version: [ '9', '10' ]
     container:
-      image: quay.io/ovirt/buildcontainer:${{ matrix.buildcontainer }}
-      options: --privileged --init --cgroupns host
+      image: quay.io/ovirt/buildcontainer:almalinux10
+      options: --privileged
+      volumes:
+        - /dev:/dev
 
     steps:
 
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Build images
+    - name: Install Kiwi
       run: |
-        libvirtd --daemon
-        virtlogd --daemon
+          dnf install -y epel-release
+          dnf install -y kiwi-cli gdisk
+
+    - name: Build images
+      env:
+        DISTRO: ${{ matrix.os }}
+        DISTRO_VERSION: ${{ matrix.version }}
+        BUILD_STORAGE: 1
+        BUILD_ENGINE_INSTALLED: 1
+        BUILD_HOST_INSTALLED: 1
+        BUILD_HE_INSTALLED: 1
+      run: |
         cd ..
-        curl --fail -O https://resources.ovirt.org/repos/ovirt/github-ci/centos/${{ matrix.iso }}
-        DISTRO=${{ matrix.os }} ost-images/build.sh
+        ost-images/build.sh
 
     - name: Upload rpms to resources.ovirt.org
       uses: ovirt/ovirt-resources-upload-action@main
@@ -64,13 +64,13 @@ jobs:
         source: rpmbuild/RPMS/x86_64/*.rpm
         target: github-ci/ost-images
         cleanup: yes
-        # keep 20 last rpms (not necessarily complete set of images) + repodata
-        keep_files_count: 21
+        # keep 40 last rpms (not necessarily complete set of images) + repodata
+        keep_files_count: 41
         
     - name: Upload console log to artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: console-${{ matrix.os }}
+        name: console-${{ matrix.os }}${{ matrix.version }}
         path: "*.log"
 
     - name: Report back results
