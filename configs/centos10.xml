@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<image schemaversion="8.0" name="ost-images">
+    <description type="system">
+        <author>oVirt Developers</author>
+        <contact>devel@ovirt.org</contact>
+        <specification>oVirt OST Image - CentOS Stream 10</specification>
+    </description>
+    <include from="file://configs/default.xml"/>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.centos.org/metalink?repo=centos-baseos-10-stream&amp;arch=x86_64&amp;protocol=https,http"/>
+    </repository>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.centos.org/metalink?repo=centos-appstream-10-stream&amp;arch=x86_64&amp;protocol=https,http"/>
+    </repository>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-10-stream&amp;arch=$basearch&amp;protocol=https,http"/>
+    </repository>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.fedoraproject.org/metalink?repo=epel-10&amp;arch=x86_64"/>
+    </repository>
+    <!-- COPR -->
+    <repository alias="copr_ovirt-master-snapshot">
+        <source path="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-10-x86_64/">
+            <signing key="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/pubkey.gpg"/>
+        </source>
+    </repository>
+    <packages type="image">
+        <package name="ovirt-release-master"/>
+    </packages>
+    <include from="file://configs/packages.xml"/>
+</image>

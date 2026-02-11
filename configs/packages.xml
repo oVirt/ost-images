@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<image>    
+    <packages type="bootstrap">
+        <package name="dracut-kiwi-oem-repart"/>
+        <package name="filesystem"/>
+        <package name="basesystem"/>
+        <package name="grub2-efi-x64-modules" arch="x86_64"/>
+        <package name="grub2-efi-x64" arch="x86_64"/>
+        <package name="shim-x64" arch="x86_64"/>
+    </packages>
+    <packages type="bootstrap" profiles="centos">
+        <package name="centos-stream-repos"/>
+    </packages>
+    <packages type="bootstrap" profiles="almalinux">
+        <package name="almalinux-repos"/>
+    </packages>
+    <packages type="image">
+        <ignore name="*-firmware"/>
+        <namedCollection name="core"/>
+        <package name="bind-utils"/>
+        <package name="cloud-init"/>
+        <package name="cloud-utils-growpart"/>
+        <package name="cockpit-system"/>
+        <package name="cockpit-ws"/>
+        <package name="cockpit"/>
+        <package name="dnf-utils"/>
+        <package name="dnf"/>
+        <package name="dracut-config-generic"/>
+        <package name="firewalld"/>
+        <package name="glibc-langpack-en"/>
+        <package name="grub2"/>
+        <package name="iscsi-initiator-utils"/>
+        <package name="kernel"/>
+        <package name="lvm2"/>
+        <package name="net-snmp"/>
+        <package name="NetworkManager"/>
+        <package name="nfs-utils"/>
+        <package name="policycoreutils-python-utils"/>
+        <package name="python3"/>
+        <package name="qemu-guest-agent"/>
+        <package name="rpcbind"/>
+        <package name="sysstat"/>
+        <package name="tar"/>
+        <package name="targetcli"/>
+        <package name="tcpdump"/>
+        <package name="uuid"/>
+        <package name="wget"/>
+    </packages>
+</image>

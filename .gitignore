@@ -1,9 +1,7 @@
-*-pkglist*.txt
-*-provision-*.sh
 *.iso
-*.ks
 *.qcow2
 *.qcow2.tmp
+*.packages
 *.spec
 *.tar.gz
 *_id_rsa*
@@ -18,5 +16,10 @@ build-aux/*
 config.log
 config.status
 configure
+configure~
+configure.ac~
 install-sh
 missing
+build/
+rpmbuild/
+configs/config.sh

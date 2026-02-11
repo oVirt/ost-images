@@ -1,35 +1,33 @@
-include makefiles/constants.mk
-include makefiles/vars.mk
-include makefiles/pkglist.mk
+include makefiles/kiwi.mk
 
-include makefiles/cirros.mk
-include makefiles/base.mk
-include makefiles/engine-installed.mk
-include makefiles/host-installed.mk
-include makefiles/he-installed.mk
+%_id_rsa:
+	cp id_rsa $@
+
+%_id_rsa.pub:
+	cp id_rsa.pub $@
+
+configs/config.sh: configs/config.sh.in $(DISTRO)$(DISTRO_VERSION)_id_rsa.pub
+	sed \
+		-e "s|%SSH_PUB_KEY%|${shell cat $(DISTRO)$(DISTRO_VERSION)_id_rsa.pub}|" \
+		-e "s|%OPENSCAP_PROFILE%|${OPENSCAP_PROFILE}|" \
+		configs/config.sh.in > $@
 
 ost-images.spec: ost-images.spec.in
 	sed 's/[@]PACKAGE_RELEASE[@]/$(PACKAGE_RELEASE)/g' $< >$@
 
-ks: $(DISTRO).ks
+base: $(BASEDIR)/$(DISTRO)$(DISTRO_VERSION)-base.qcow2 $(BASEDIR)/$(DISTRO)$(DISTRO_VERSION)-base.packages
 
-.INTERMEDIATE: $(DISTRO).iso
+storage: $(STORAGEDIR)/$(DISTRO)$(DISTRO_VERSION)-storage.qcow2 $(STORAGEDIR)/$(DISTRO)$(DISTRO_VERSION)-storage.packages
 
-iso: $(DISTRO).iso
+he: $(HEDIR)/$(DISTRO)$(DISTRO_VERSION)-he-installed.qcow2 $(HEDIR)/$(DISTRO)$(DISTRO_VERSION)-he-installed.packages
 
-ssh-keys: $(DISTRO)_id_rsa
+engine: $(ENGINEDIR)/$(DISTRO)$(DISTRO_VERSION)-engine-installed.qcow2 $(ENGINEDIR)/$(DISTRO)$(DISTRO_VERSION)-engine-installed.packages
 
-base: $(DISTRO)-base.qcow2 $(DISTRO)-base-pkglist.txt
-
-engine: $(DISTRO)-engine-installed.qcow2 $(DISTRO)-engine-installed-pkglist.txt $(DISTRO)-engine-installed-pkglist-diff.txt
-
-host: $(DISTRO)-host-installed.qcow2 $(DISTRO)-host-installed-pkglist.txt $(DISTRO)-host-installed-pkglist-diff.txt
-
-he: $(DISTRO)-he-installed.qcow2 $(DISTRO)-he-installed-pkglist.txt $(DISTRO)-he-installed-pkglist-diff.txt
+host: $(HOSTDIR)/$(DISTRO)$(DISTRO_VERSION)-host-installed.qcow2 $(HOSTDIR)/$(DISTRO)$(DISTRO_VERSION)-host-installed.packages
 
 spec: ost-images.spec
 
-all: base engine host he spec
+all: base storage engine host he spec
 
 gen-VERSION:
 	if test -d ../.git; then                                             \
@@ -38,60 +36,40 @@ gen-VERSION:
 
 dist-hook: gen-VERSION
 
-clean-local:
-	virsh list --name | grep -q "^$(DISTRO)-base$$" && virsh destroy $(DISTRO)-base || :
-	virsh list --name --inactive | grep -q "^$(DISTRO)-base$$" && virsh undefine $(DISTRO)-base || :
-
 dist_image_DATA = \
-	$(DISTRO)-base-pkglist.txt \
-	$(DISTRO)-base.qcow2 \
-	$(DISTRO).ks \
-	$(DISTRO)_id_rsa \
-	$(DISTRO)_id_rsa.pub \
-	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed-pkglist-diff.txt) \
-	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed-pkglist.txt) \
-	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-engine-installed.qcow2) \
-	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-host-installed-pkglist-diff.txt) \
-	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-host-installed-pkglist.txt) \
-	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-host-installed.qcow2) \
-	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-he-installed-pkglist-diff.txt) \
-	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-he-installed-pkglist.txt) \
-	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-he-installed.qcow2) \
+	$(DISTRO)$(DISTRO_VERSION)_id_rsa \
+	$(DISTRO)$(DISTRO_VERSION)_id_rsa.pub \
+	$(BASEDIR)/$(DISTRO)$(DISTRO_VERSION)-base.packages \
+	$(BASEDIR)/$(DISTRO)$(DISTRO_VERSION)-base.qcow2 \
+	$(if $(BUILD_STORAGE),$(STORAGEDIR)/$(DISTRO)$(DISTRO_VERSION)-storage.packages) \
+	$(if $(BUILD_STORAGE),$(STORAGEDIR)/$(DISTRO)$(DISTRO_VERSION)-storage.qcow2) \
+	$(if $(BUILD_ENGINE_INSTALLED),$(ENGINEDIR)/$(DISTRO)$(DISTRO_VERSION)-engine-installed.packages) \
+	$(if $(BUILD_ENGINE_INSTALLED),$(ENGINEDIR)/$(DISTRO)$(DISTRO_VERSION)-engine-installed.qcow2) \
+	$(if $(BUILD_HOST_INSTALLED),$(HOSTDIR)/$(DISTRO)$(DISTRO_VERSION)-host-installed.packages) \
+	$(if $(BUILD_HOST_INSTALLED),$(HOSTDIR)/$(DISTRO)$(DISTRO_VERSION)-host-installed.qcow2) \
+	$(if $(BUILD_HE_INSTALLED),$(HEDIR)/$(DISTRO)$(DISTRO_VERSION)-he-installed.packages) \
+	$(if $(BUILD_HE_INSTALLED),$(HEDIR)/$(DISTRO)$(DISTRO_VERSION)-he-installed.qcow2) \
 	$(NULL)
 
-dist_image_SCRIPTS = \
-	$(if $(BUILD_ENGINE_INSTALLED),$(DISTRO)-provision-engine.sh) \
-	$(if $(BUILD_HOST_INSTALLED),$(DISTRO)-provision-host.sh) \
-	$(if $(BUILD_HE_INSTALLED),$(DISTRO)-provision-he.sh) \
-	$(NULL)
-
-CLEANFILES = \
-	cirros.img \
-	*-console.log \
-	*-pkglist*.txt \
-	*.ks \
-	*.qcow2 \
-	*.qcow2.tmp \
-	*.spec \
-	*_id_rsa* \
-	$(DISTRO)-provision-engine.sh \
-	$(DISTRO)-provision-host.sh \
-	$(DISTRO)-provision-he.sh \
-	$(DIST_ARCHIVES) \
-	$(NULL)
+clean-local:
+	rm -vf $(DISTRO)$(DISTRO_VERSION)_id_rsa $(DISTRO)$(DISTRO_VERSION)_id_rsa.pub
+	rm -vf *.spec $(DIST_ARCHIVES)
+	rm -vf configs/config.sh
+	rm -rf build
 
 EXTRA_DIST = \
 	ost-images.spec \
 	ost-images.spec.in \
-	template.ks.in \
 	$(NULL)
 
 rpm: spec
 	rpmbuild -bb \
 		--define "_topdir $(shell realpath $(builddir))/rpmbuild" \
 		--define "distro $(DISTRO)" \
+		--define "distro_version $(DISTRO_VERSION)" \
 		--define "release $(PACKAGE_RELEASE)" \
-		--define "xz_num_threads $(XZ_NUM_THREADS)" \
+		--define "xz_num_threads 2" \
+		--define "with_storage $(if $(BUILD_STORAGE),1,0)" \
 		--define "with_engine_installed $(if $(BUILD_ENGINE_INSTALLED),1,0)" \
 		--define "with_host_installed $(if $(BUILD_HOST_INSTALLED),1,0)" \
 		--define "with_he_installed $(if $(BUILD_HE_INSTALLED),1,0)" \

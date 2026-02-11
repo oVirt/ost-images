@@ -1,5 +1,5 @@
 #
-# Copyright 2020 Red Hat, Inc.
+# Copyright 2026 oVirt Developers.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,9 +19,7 @@
 #
 
 # Autoconf initialization
-AC_INIT([ost-images],
-        [m4_esyscmd([build-aux/pkg-version --version])],
-        [devel@ovirt.org])
+AC_INIT([ost-images],[m4_esyscmd([build-aux/pkg-version --version])],[devel@ovirt.org])
 
 AC_SUBST([PACKAGE_RELEASE],
 	   [m4_esyscmd([build-aux/pkg-version --release])])
@@ -40,23 +38,36 @@ AC_ARG_WITH(
     [distro],
     [AS_HELP_STRING(
         [--with-distro=DISTRO],
-        [the distro that you want to build, @<:@default=el9stream@:>@]
+        [the distro that you want to build, @<:@default=centos@:>@]
     )],
     ,
-    [with_distro="el9stream"]
+    [with_distro="centos"]
 )
 AC_SUBST([DISTRO], ["${with_distro}"])
+
+AC_ARG_WITH(
+    [distro_version],
+    [AS_HELP_STRING(
+        [--with-distro-version=DISTRO],
+        [the distro that you want to build, @<:@default=9@:>@]
+    )],
+    ,
+    [with_distro_version="9"]
+)
+AC_SUBST([DISTRO_VERSION], ["${with_distro_version}"])
 
 AC_CONFIG_COMMANDS(
     [report],
     [
         echo "-----"
-        echo "----- Will build distro: $DISTRO"
+        echo "----- Will build distro: $DISTRO version $DISTRO_VERSION"
         echo "-----"
     ],
     [DISTRO=$with_distro]
+    [DISTRO_VERSION=$with_distro_version]
 )
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
     Makefile
 ])
+AC_OUTPUT

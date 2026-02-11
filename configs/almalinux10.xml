@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<image schemaversion="8.0" name="ost-images">
+    <description type="system">
+        <author>oVirt Developers</author>
+        <contact>devel@ovirt.org</contact>
+        <specification>oVirt OST Image - AlmaLinux 10</specification>
+    </description>
+    <include from="file://configs/default.xml"/>
+    <repository sourcetype="mirrorlist">
+        <source path="https://mirrors.almalinux.org/mirrorlist/10/baseos?arch=$basearch&amp;protocol=https"/>
+    </repository>
+    <repository sourcetype="mirrorlist">
+        <source path="https://mirrors.almalinux.org/mirrorlist/10/appstream?arch=$basearch&amp;protocol=https"/>
+    </repository>
+    <repository sourcetype="mirrorlist">
+        <source path="https://mirrors.almalinux.org/mirrorlist/10/extras?arch=$basearch&amp;protocol=https"/>
+    </repository>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.fedoraproject.org/metalink?repo=epel-10&amp;arch=x86_64"/>
+    </repository>
+    <!-- COPR -->
+    <repository alias="copr_ovirt-master-snapshot">
+        <source path="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/rhel-10-x86_64/">
+            <signing key="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/pubkey.gpg"/>
+        </source>
+    </repository>
+    <packages type="image">
+        <package name="ovirt-release-master"/>
+    </packages>
+    <include from="file://configs/packages.xml"/>
+</image>
