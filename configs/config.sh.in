@@ -88,7 +88,7 @@ if [[ "$kiwi_profiles" == *"storage"* ]]; then
 
     ARTIFACTS_PATH="/var/tmp/selenium"
 
-    dnf install -y podman
+    dnf install -y podman slirp4netns
 
     # redirect container storage to /var/tmp/
     sed -i 's|/var/lib/containers/storage|/var/tmp/containers/storage|g' /etc/containers/storage.conf
