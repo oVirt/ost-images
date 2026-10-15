@@ -17,6 +17,8 @@ sed -i 's/\(^GSSAPI[[:alpha:]]*\).*/\1 no/g;s/^#UseDNS.*/UseDNS no/g;s/^#PermitR
 # SSH Key
 echo -n "%SSH_PUB_KEY%" >> /root/.ssh/authorized_keys
 
+TINYCORE_VERSION=13.14
+
 # History
 echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 
@@ -118,7 +120,7 @@ if [[ "$kiwi_profiles" == *"provision-he"* ]]; then
     fi
 
     mkdir /usr/share/ovirt-system-tests
-    wget -O /usr/share/ovirt-system-tests/cirros.img https://github.com/oVirt/ovirt-tinycore-linux/releases/download/v13.13/oVirtTinyCore64-13.12.qcow2
+    wget -O /usr/share/ovirt-system-tests/cirros.img https://github.com/oVirt/ovirt-tinycore-linux/releases/download/v${TINYCORE_VERSION}/oVirtTinyCore64-${TINYCORE_VERSION}.qcow2
 fi
 
 if [[ "$kiwi_profiles" == *"provision-engine"* ]]; then
@@ -130,7 +132,7 @@ if [[ "$kiwi_profiles" == *"provision-engine"* ]]; then
         ovirt-imageio-client
 
     mkdir /usr/share/ovirt-system-tests
-    wget -O /usr/share/ovirt-system-tests/cirros.img https://github.com/oVirt/ovirt-tinycore-linux/releases/download/v13.13/oVirtTinyCore64-13.12.qcow2
+    wget -O /usr/share/ovirt-system-tests/cirros.img https://github.com/oVirt/ovirt-tinycore-linux/releases/download/v${TINYCORE_VERSION}/oVirtTinyCore64-${TINYCORE_VERSION}.qcow2
 fi
 
 if [[ "$kiwi_profiles" == *"provision-host"* || "$kiwi_profiles" == *"provision-he"* ]]; then
