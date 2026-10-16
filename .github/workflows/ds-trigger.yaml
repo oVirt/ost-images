@@ -11,11 +11,9 @@ jobs:
   trigger-ost:
     if: |
       github.event.issue.pull_request &&
-      github.event.comment.body == '/ost' &&
+      startsWith(github.event.comment.body, '/ost') &&
       (
         github.event.comment.author_association == 'MEMBER' ||
         github.event.comment.author_association == 'COLLABORATOR'
       )
     uses: oVirt/ovirt-system-tests/.github/workflows/ost.yaml@master
-    with:
-      comment: " basic-suite-master el9stream"
