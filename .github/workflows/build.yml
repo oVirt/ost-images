@@ -41,7 +41,7 @@ jobs:
     - name: Install Kiwi
       run: |
           dnf install -y epel-release
-          dnf install -y kiwi-cli gdisk
+          dnf install -y kiwi-cli kiwi-systemdeps-disk-images gdisk
 
     - name: Build images
       env:
